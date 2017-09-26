@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:paddingTop="8dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:id="@+id/bookListingCreator"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:id="@+id/bookListingUserIcon"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:src="@mipmap/ic_launcher"
+                    android:paddingBottom="2dp"
+                    android:layout_weight="1"
+                    />
+
+                <TextView
+                    android:id="@+id/bookListingUserName"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:layout_weight="3"
+                    android:gravity="left"
+                    android:textColor="@color/bookListing"
+                    android:maxLines="1"
+                    android:text="David"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/ViewPagesImages"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:layout_below="@+id/bookListingCreator">
+            </android.support.v4.view.ViewPager>
+
+            <TextView
+                android:id="@+id/bookListingBookTitle"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="5dp"
+                android:paddingLeft="10dp"
+                android:gravity="left"
+                android:textColor="@color/bookListing"
+                android:maxLines="1"
+                android:textStyle="bold"
+                android:text="Testing"
+                android:layout_below="@+id/ViewPagesImages"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/bookListingBookTitle"
+                android:id="@+id/bookListingBookCreateTime"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:id="@+id/bookListingTimeIcon"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:background="@color/white"
+                    android:src="@drawable/ic_access_time_black_24dp"
+                    android:layout_weight="1"
+                    />
+
+                <TextView
+                    android:id="@+id/bookListingTimetext"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:layout_weight="5"
+                    android:gravity="left"
+                    android:textColor="@color/bookListing"
+                    android:maxLines="1"
+                    android:text="Time"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/bookListingBookCreateTime"
+                android:id="@+id/bookListingBookPrice"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:id="@+id/bookListingPriceIcon"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:background="@color/white"
+                    android:src="@drawable/ic_attach_money_black_24dp"
+                    android:layout_weight="1"
+                    />
+
+                <TextView
+                    android:id="@+id/bookListingPricetext"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:layout_weight="5"
+                    android:gravity="left"
+                    android:textColor="@color/bookListing"
+                    android:maxLines="1"
+                    android:text="HKD $ 25"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/bookListingBookPrice"
+                android:id="@+id/bookListingBookDesc"
+                android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/bookListingDescIcon"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:background="@color/white"
+                android:src="@drawable/ic_info_outline_black_24dp"
+                android:layout_weight="1"
+                />
+
+            <TextView
+                android:id="@+id/bookListingDescText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:layout_weight="5"
+                android:gravity="left"
+                android:textColor="@color/bookListing"
+                android:text="Testing ....."
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/bookListingMenuBar"
+                android:layout_below="@+id/bookListingBookDesc"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:id="@+id/bookListingLikeIcon"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:background="@color/white"
+                    android:src="@drawable/ic_favorite_border_black_30dp"
+                    android:layout_weight="1"
+                    />
+                <ImageView
+                    android:id="@+id/bookListingMsgIcon"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:background="@color/white"
+                    android:src="@drawable/ic_sms_black_30dp"
+                    android:layout_weight="1"
+                    />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+</LinearLayout>

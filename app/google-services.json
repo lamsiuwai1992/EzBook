@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "545133431994",
+    "firebase_url": "https://ezbookdatabase.firebaseio.com",
+    "project_id": "ezbookdatabase",
+    "storage_bucket": "ezbookdatabase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:545133431994:android:7e6f0e0a175f39b4",
+        "android_client_info": {
+          "package_name": "com.ezbook.lamsiuwai.ezbook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "545133431994-kojreq16gg4eth949brfo973bknk51b4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ezbook.lamsiuwai.ezbook",
+            "certificate_hash": "562c655adcf58c8e81bff24065d5dfffee015dac"
+          }
+        },
+        {
+          "client_id": "545133431994-6v87vbdk853j6434gioh4fdrj36lon7t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDs0lzpo_-V6XLmXzV9c-pDAjZkdAiXLpM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "545133431994-6v87vbdk853j6434gioh4fdrj36lon7t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

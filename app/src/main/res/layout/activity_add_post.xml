@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <RelativeLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <Button
+                android:id="@+id/buttonUploadImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border"
+                android:text="@string/addPostAddImageBtn"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+
+                android:layout_alignParentStart="true" />
+            <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_below="@+id/buttonUploadImage"
+                android:id="@+id/addImageScroll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fillViewport="true"
+                android:scrollbars="none" >
+
+                <LinearLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/imageUpload0"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginRight="5dp"
+                        android:scaleType="fitXY"
+                        />
+                    <ImageView
+                        android:id="@+id/imageUpload1"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginRight="5dp"
+                        android:scaleType="fitXY"
+                        />
+                    <ImageView
+                        android:id="@+id/imageUpload2"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginRight="5dp"
+                        android:scaleType="fitXY"
+                        />
+                    <ImageView
+                        android:id="@+id/imageUpload3"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginRight="5dp"
+                        android:scaleType="fitXY"
+                        />
+                    <ImageView
+                        android:id="@+id/imageUpload4"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginRight="5dp"
+                        android:scaleType="fitXY"
+                        />
+                </LinearLayout>
+            </HorizontalScrollView>
+            <TextView
+                android:id="@+id/textView"
+                android:layout_below="@+id/addImageScroll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/addPostDetail"
+                android:textSize="16sp"
+                android:layout_marginLeft="10dp"/>
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView"
+                android:id="@+id/liner01"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/tvAddPostBookName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="15dp"
+                    android:text="@string/addPostBookName"
+                    android:background="@drawable/border"
+                    android:layout_weight="0.5"
+                    android:gravity="left"
+                    android:textColor="@color/input_login_hint"
+                    android:textAppearance="?android:attr/textAppearanceMedium"  />
+
+
+                <EditText
+                    android:id="@+id/addPostBookNameField"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:layout_weight="1"
+                    android:paddingRight="10dp"
+                    android:gravity="right"
+                    android:textColor="@color/input_login_hint"
+                    android:maxLines="1"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/addPostMenuRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/liner01">
+            </android.support.v7.widget.RecyclerView>
+
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/addPostMenuRecycler"
+                android:id="@+id/liner02"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/tvAddPostPrice"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="15dp"
+                    android:text="@string/addPostPrice"
+                    android:background="@drawable/border"
+                    android:layout_weight="0.5"
+                    android:gravity="left"
+                    android:textColor="@color/input_login_hint"
+                    android:textAppearance="?android:attr/textAppearanceMedium"  />
+
+                <EditText
+                    android:id="@+id/addPostPriceField"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:layout_weight="1"
+                    android:paddingRight="10dp"
+                    android:gravity="right"
+                    android:textColor="@color/input_login_hint"
+                    android:maxLines="1"
+                    android:inputType="number"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
+            <TextView
+                android:id="@+id/tvDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/addPostDesc"
+                android:layout_below="@+id/liner02"
+                android:layout_marginTop="10dp"
+                android:textSize="16sp"
+                android:layout_marginLeft="10dp"/>
+
+            <EditText
+                android:id="@+id/addPostDescField"
+                android:layout_width="match_parent"
+                android:minHeight="100dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border"
+                android:layout_below="@+id/tvDesc"
+                android:padding="10dp"
+                android:textColor="@color/input_login_hint"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+
+        </RelativeLayout>
+    </ScrollView>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/liner03"
+        android:orientation="horizontal" >
+        <Button
+            android:id="@+id/addSubmitBth"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_weight="1"
+            android:paddingRight="10dp"
+            android:textColor="@color/input_login_hint"
+            android:text="@string/submit"
+            android:background="@drawable/border"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+        <Button
+            android:id="@+id/addCancelBth"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_weight="1"
+            android:paddingRight="10dp"
+            android:textColor="@color/input_login_hint"
+            android:text="@string/cancel"
+            android:background="@drawable/border"
+            android:layout_toRightOf="@+id/addSubmitBth"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </LinearLayout>
+</RelativeLayout>
+
