@@ -37,6 +37,8 @@
     <string name="forgot_password_msg">We just need your registered Email Id to sent you password reset instructions.</string>
     <string name="title_activity_main2">Main2Activity</string>
 
+    //for logout
+    <string name="logout">Logout</string>
 
     <string name="primary">Primary</string>
     <string name="secondary">Secondary</string>
