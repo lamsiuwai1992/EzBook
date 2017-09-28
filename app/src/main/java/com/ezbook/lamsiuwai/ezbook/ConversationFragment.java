@@ -112,12 +112,13 @@ public class ConversationFragment extends Fragment {
                                 String retrieveName = dataSnapshot.child("Name").getValue(String.class);
                                 String retrieveEmail = dataSnapshot.child("Email").getValue(String.class);
                                 String retrieveUrl = dataSnapshot.child("ProfileIcon").getValue(String.class);
-
+                                String retrieveId = dataSnapshot.getKey();
 
                                 Intent intent = new Intent(getContext(), ChatConversationActivity.class);
                                 intent.putExtra("image_id", retrieveUrl);
                                 intent.putExtra("email", retrieveEmail);
                                 intent.putExtra("name", retrieveName);
+                                intent.putExtra("retrieveId",retrieveId);
 
                                 startActivity(intent);
                             }

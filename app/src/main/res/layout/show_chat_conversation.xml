@@ -10,7 +10,7 @@
     tools:layout_editor_absoluteY="25dp">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/fragment_chat_recycler_view"
+        android:id="@+id/fragmentChatRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"
@@ -30,14 +30,14 @@
         android:layout_height="wrap_content"
         android:src="@mipmap/no_chat_available"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/no_chat_text"
+        app:layout_constraintBottom_toTopOf="@+id/noChatText"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
     <TextView
-        android:id="@+id/no_chat_text"
+        android:id="@+id/noChatText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -58,7 +58,7 @@
         android:visibility="gone"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/no_chat_text" />
+        app:layout_constraintTop_toBottomOf="@+id/noChatText" />
 
     <LinearLayout
         android:id="@+id/linearLayout4"
