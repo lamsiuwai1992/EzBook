@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,14 +87,14 @@ public class CategoryListingFragment extends Fragment {
 
                 }
                 nssRecyclerView = view.findViewById(R.id.rvNssSubjects);
-                nssRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-                nssAdpater = new CategoryListingRecyclerViewAdapter(getContext(), nssImgList);
+                nssRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+                nssAdpater = new CategoryListingRecyclerViewAdapter(getActivity(), nssImgList);
                 nssRecyclerView.setAdapter(nssAdpater);
                 nssAdpater.setClickListener(new CategoryListingRecyclerViewAdapter.ItemClickListener() {
 
                     @Override
                     public void onItemClick(View view, int position) {
-                        SM.sendData("nss", nssAdpater.getItem(position));
+                        SM.sendData("HKDSE", nssAdpater.getSubjectName(position));
                     }
 
                 });
@@ -115,14 +116,14 @@ public class CategoryListingFragment extends Fragment {
 
                 }
                 secondaryRecyclerView = view.findViewById(R.id.rvSecondarySubjects);
-                secondaryRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-                secondaryAdapter = new CategoryListingRecyclerViewAdapter(getContext(), secondaryImgList);
+                secondaryRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+                secondaryAdapter = new CategoryListingRecyclerViewAdapter(getActivity(), secondaryImgList);
                 secondaryRecyclerView.setAdapter(secondaryAdapter);
                 secondaryAdapter.setClickListener(new CategoryListingRecyclerViewAdapter.ItemClickListener() {
 
                     @Override
                     public void onItemClick(View view, int position) {
-                        SM.sendData("secondary", secondaryAdapter.getItem(position));
+                        SM.sendData("Secondary", secondaryAdapter.getSubjectName(position));
                     }
 
                 });
@@ -144,14 +145,14 @@ public class CategoryListingFragment extends Fragment {
 
                 }
                 primaryRecyclerView = view.findViewById(R.id.rvPrimarySubjects);
-                primaryRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-                primaryAdapter = new CategoryListingRecyclerViewAdapter(getContext(), primaryImgList);
+                primaryRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+                primaryAdapter = new CategoryListingRecyclerViewAdapter(getActivity(), primaryImgList);
                 primaryRecyclerView.setAdapter(primaryAdapter);
                 primaryAdapter.setClickListener(new CategoryListingRecyclerViewAdapter.ItemClickListener() {
 
                     @Override
                     public void onItemClick(View view, int position) {
-                        SM.sendData("primary", primaryAdapter.getItem(position));
+                        SM.sendData("Primary", primaryAdapter.getSubjectName(position));
                     }
 
                 });

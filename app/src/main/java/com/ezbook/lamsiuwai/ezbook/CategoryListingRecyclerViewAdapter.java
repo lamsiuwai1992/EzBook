@@ -72,8 +72,8 @@ public class CategoryListingRecyclerViewAdapter extends RecyclerView.Adapter<Cat
         }
 
         // convenience method for getting data at click position
-        public String getItem(int position) {
-            return listImage.get(position).getSubjectIcon();
+        public String getSubjectName(int position) {
+            return listImage.get(position).getSubjectName();
         }
 
         // allows clicks events to be caught

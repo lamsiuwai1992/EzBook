@@ -19,6 +19,7 @@ public class BookObject {
     private String createTime ;
     private String bookType ;
     private String bookDescrpition;
+    private String category;
 
     public String getBookDescrpition() {
         return bookDescrpition;
@@ -75,7 +76,6 @@ public class BookObject {
         this.category = category;
     }
 
-    private String category;
 
     public String getBookType() {
         return bookType;

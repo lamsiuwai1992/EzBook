@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.List;
 
@@ -41,7 +42,8 @@ public class BookListingSwipeAdapter extends PagerAdapter {
         inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = inflater.inflate(R.layout.booklisting_swipe,container,false);
         ImageView img =(ImageView)v.findViewById(R.id.bookListingImage);
-        Glide.with(context).load(bookImage.get(position).getImageURL()).into(img);
+        //Glide.with(context).load(bookImage.get(position).getImageURL()).into(img);
+        Glide.with(context).load(bookImage.get(position).getImageURL()).crossFade().thumbnail(0.5f).placeholder(R.mipmap.loading).diskCacheStrategy(DiskCacheStrategy.ALL).into(img);
         container.addView(v);
         return v;
     }

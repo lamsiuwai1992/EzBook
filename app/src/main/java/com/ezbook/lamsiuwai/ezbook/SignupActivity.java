@@ -106,9 +106,9 @@ public class SignupActivity extends AppCompatActivity {
 
                                     DatabaseReference usersRef= mRootRef.child("Users").child(UserID);
 
-                                    usersRef.child("Name").setValue(userName);
-                                    usersRef.child("ProfileIcon").setValue("https://firebasestorage.googleapis.com/v0/b/ezbookdatabase.appspot.com/o/ProfileIcon%2FuserDefaultIcon.png?alt=media&token=f3fbd7b0-c103-4d52-913b-9e829e0eb71b");
-                                    usersRef.child("Email").setValue(user.getEmail());
+                                    usersRef.child("name").setValue(userName);
+                                    usersRef.child("profileIcon").setValue("https://firebasestorage.googleapis.com/v0/b/ezbookdatabase.appspot.com/o/ProfileIcon%2FuserDefaultIcon.png?alt=media&token=f3fbd7b0-c103-4d52-913b-9e829e0eb71b");
+                                    usersRef.child("email").setValue(user.getEmail());
                                     startActivity(new Intent(SignupActivity.this, MainActivity.class));
                                     finish();
                                 }

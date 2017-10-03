@@ -109,9 +109,9 @@ public class ConversationFragment extends Fragment {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                String retrieveName = dataSnapshot.child("Name").getValue(String.class);
-                                String retrieveEmail = dataSnapshot.child("Email").getValue(String.class);
-                                String retrieveUrl = dataSnapshot.child("ProfileIcon").getValue(String.class);
+                                String retrieveName = dataSnapshot.child("name").getValue(String.class);
+                                String retrieveEmail = dataSnapshot.child("email").getValue(String.class);
+                                String retrieveUrl = dataSnapshot.child("profileIcon").getValue(String.class);
                                 String retrieveId = dataSnapshot.getKey();
 
                                 Intent intent = new Intent(getContext(), ChatConversationActivity.class);
