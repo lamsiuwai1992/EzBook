@@ -95,19 +95,26 @@ public class BookListFragment extends Fragment {
 
                                         }
                                     }
-                                    Log.d("Size", String.valueOf(creatorList.size()));
                                     mLayoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
                                     mLayoutManager.setStackFromEnd(true);
                                     mLayoutManager.setReverseLayout(true);
                                     bookListingView = view.findViewById(R.id.rvBookListing);
                                     bookListingView.setLayoutManager(mLayoutManager);
+                                    while (bookList.size()!=creatorList.size()){
+                                        // avoid crashing the program
+                                        Log.d("book size", String.valueOf(bookList.size()));
+                                        Log.d("creator size", String.valueOf(creatorList.size()));
+                                        return;
+                                    }
                                     bookListingAdapter = new BookListingRecycleViewAdapter(getActivity(), bookList,creatorList);
                                     bookListingView.setAdapter(bookListingAdapter);
+
 
                                 }
 
                                 @Override
                                 public void onCancelled(DatabaseError databaseError) {
+
 
                                 }
 

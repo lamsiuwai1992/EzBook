@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,8 @@ public class ConversationFragment extends Fragment {
     private FirebaseAuth auth;
     RecyclerView recyclerView;
     FirebaseDatabase firebaseDatabase;
-    DatabaseReference myRef;
+    DatabaseReference currentContactListRef;
+    DatabaseReference userListRef;
     public FirebaseRecyclerAdapter<ShowChatListObject, ShowChatListViewHolder> mFirebaseAdapter;
     ProgressBar progressBar;
     LinearLayoutManager mLinearLayoutManager;
@@ -56,8 +58,10 @@ public class ConversationFragment extends Fragment {
 
         firebaseDatabase = FirebaseDatabase.getInstance();
 
-        myRef = firebaseDatabase.getReference("Users");
+        //myRef = firebaseDatabase.getReference("ContactList").child("76yEQem2XeeE147VAsINa7hgvnI3");
 
+        currentContactListRef = firebaseDatabase.getReference("ContactList").child(MainActivity.currenUserId);
+        userListRef = firebaseDatabase.getReference("Users");
         progressBar = view.findViewById(R.id.show_chat_progressBar);
 
         //Recycler View
@@ -76,51 +80,59 @@ public class ConversationFragment extends Fragment {
         progressBar.setVisibility(ProgressBar.VISIBLE);
 
 
-        mFirebaseAdapter = new FirebaseRecyclerAdapter<ShowChatListObject, ShowChatListViewHolder>(ShowChatListObject.class, R.layout.show_chat_contact_item, ShowChatListViewHolder.class, myRef) {
+        mFirebaseAdapter = new FirebaseRecyclerAdapter<ShowChatListObject, ShowChatListViewHolder>(ShowChatListObject.class, R.layout.show_chat_contact_item, ShowChatListViewHolder.class, currentContactListRef) {
 
-            public void populateViewHolder(final ShowChatListViewHolder viewHolder, ShowChatListObject model, final int position) {
+            public void populateViewHolder(final ShowChatListViewHolder viewHolder, final ShowChatListObject model, final int position) {
 
                 progressBar.setVisibility(ProgressBar.INVISIBLE);
-
-                if (!model.getName().equals("Null")) {
-                    viewHolder.PersonName(model.getName());
-                    viewHolder.PersonIcon(model.getProfileIcon());
-
-                    String email = auth.getCurrentUser().getEmail();
-
-                    //hide the contact of himself
-                    if (model.getEmail().equals(email)) {
-                        viewHolder.Layout_hide();
-
-
-                    } else
-                        viewHolder.PersonEmail(model.getEmail());
-                }
-
-
-                //OnClick Item
-                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                String userKey = getRef(position).getKey();
+                Log.d ("contactList" ,this.getRef(position).getKey());
+                userListRef.child(userKey).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        UserObject userObj = dataSnapshot.getValue(UserObject.class);
+                        if(!userObj.getName().equals("Null"))
+                        viewHolder.PersonName(userObj.getName());
+                        viewHolder.PersonIcon(userObj.getProfileIcon());
+                        viewHolder.personLastMsg(model.getLastMessage());
+                    }
 
                     @Override
-                    public void onClick(final View v) {
+                    public void onCancelled(DatabaseError databaseError) {
 
-                        DatabaseReference ref = mFirebaseAdapter.getRef(position);
-                        ref.addValueEventListener(new ValueEventListener() {
+                    }
+                });
+
+                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(final View view) {
+                        DatabaseReference  ref = mFirebaseAdapter.getRef(position);
+                        ref.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
+                                final String retrieveId = dataSnapshot.getKey();
+                                Log.d("onClickKey",retrieveId);
+                                userListRef.child(retrieveId).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        if(dataSnapshot.exists()){
+                                            UserObject userObj = dataSnapshot.getValue(UserObject.class);
+                                            String retrieveName = userObj.getName();
+                                            String retrieveUserIconUrl = userObj.getProfileIcon();
+                                            Intent intent = new Intent(getContext(), ChatConversationActivity.class);
+                                            intent.putExtra("imageId", retrieveUserIconUrl);
+                                            intent.putExtra("name", retrieveName);
+                                            intent.putExtra("retrieveId",retrieveId);
 
-                                String retrieveName = dataSnapshot.child("name").getValue(String.class);
-                                String retrieveEmail = dataSnapshot.child("email").getValue(String.class);
-                                String retrieveUrl = dataSnapshot.child("profileIcon").getValue(String.class);
-                                String retrieveId = dataSnapshot.getKey();
+                                            startActivity(intent);
+                                        }
+                                    }
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
 
-                                Intent intent = new Intent(getContext(), ChatConversationActivity.class);
-                                intent.putExtra("image_id", retrieveUrl);
-                                intent.putExtra("email", retrieveEmail);
-                                intent.putExtra("name", retrieveName);
-                                intent.putExtra("retrieveId",retrieveId);
+                                    }
+                                });
 
-                                startActivity(intent);
                             }
 
                             @Override
@@ -141,7 +153,7 @@ public class ConversationFragment extends Fragment {
 
     //View Holder For Recycler View
     public static class ShowChatListViewHolder extends RecyclerView.ViewHolder {
-        private final TextView personName, personEmail;
+        private final TextView personName, personLastMsg;
         private final ImageView personIcon;
         private final LinearLayout layout;
         final LinearLayout.LayoutParams params;
@@ -149,7 +161,7 @@ public class ConversationFragment extends Fragment {
         public ShowChatListViewHolder(final View itemView) {
             super(itemView);
             personName = itemView.findViewById(R.id.chatPersonName);
-            personEmail =itemView.findViewById(R.id.chatPersonEmail);
+            personLastMsg =itemView.findViewById(R.id.chatPersonLastMsg);
             personIcon = itemView.findViewById(R.id.chatPersonIcon);
             layout = itemView.findViewById(R.id.show_chat_single_item_layout);
             params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -167,8 +179,8 @@ public class ConversationFragment extends Fragment {
         }
 
 
-        private void PersonEmail(String title) {
-            personEmail.setText(title);
+        private void personLastMsg(String title) {
+            personLastMsg.setText(title);
         }
 
 

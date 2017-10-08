@@ -9,19 +9,58 @@
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="25dp">
 
+    <android.support.v7.widget.Toolbar
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/toolbar"
+        android:layout_width="386dp"
+        android:layout_height="56dp"
+        android:background="@color/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="0dp">
+
+
+        <LinearLayout
+            android:id="@+id/linearLayout10"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/userIcon"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                android:layout_margin="8dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_weight="1"
+                android:src="@mipmap/account_circle" />
+
+            <TextView
+                android:id="@+id/userName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:text="Siu Wai"
+                android:textColor="@color/white"
+                android:layout_weight="5" />
+
+        </LinearLayout>
+    </android.support.v7.widget.Toolbar>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/fragmentChatRecyclerView"
-        android:layout_width="0dp"
+        android:layout_width="368dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        android:layout_marginRight="8dp"
         app:layout_constraintVertical_bias="0.0"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8dp">
-
+        app:layout_constraintRight_toRightOf="parent">
     </android.support.v7.widget.RecyclerView>
 
     <ImageView
@@ -81,6 +120,7 @@
             android:layout_height="35dp"
             android:layout_weight="4"
             android:padding="4dp"
+            android:layout_marginBottom="4dp"
             android:src="@drawable/ic_attach_file_black_24dp" />
 
         <EditText
@@ -99,6 +139,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="4"
             android:padding="4dp"
+            android:layout_marginBottom="4dp"
             android:src="@android:drawable/ic_menu_send" />
 
 

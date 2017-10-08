@@ -25,6 +25,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
@@ -58,21 +59,23 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static java.security.AccessController.getContext;
+
 
 public class ChatConversationActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     FirebaseDatabase firebaseDatabase;
-    DatabaseReference senderRef,receiverRef;
+    DatabaseReference senderRef,receiverRef,senderLastMsg , receiverLastMsg;
     private FirebaseRecyclerAdapter<ShowChatCoversationObject, ChatConversationViewHolder> mFirebaseAdapter;
     public LinearLayoutManager mLinearLayoutManager;
     static String SenderName;
     private FirebaseAuth auth;
     private String userId;
 
-    ImageView attachmentIcon,sendIcon,no_data_available_image;
+    ImageView attachmentIcon,sendIcon,no_data_available_image,receiverIcon;
     EditText messageArea;
-    TextView no_chat;
+    TextView no_chat,receiverName;
 
     private static final int GALLERY_INTENT = 2;
     private ProgressDialog mProgressDialog;
@@ -98,19 +101,34 @@ public class ChatConversationActivity extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
         senderRef = FirebaseDatabase.getInstance().getReference().child("Chat").child(userId).child(receiverId);
         senderRef.keepSynced(true);
+        senderLastMsg = FirebaseDatabase.getInstance().getReference().child("ContactList").child(userId).child(receiverId).child("lastMessage");
 
 
 
         receiverRef = FirebaseDatabase.getInstance().getReference().child("Chat").child(receiverId).child(userId);
+        receiverLastMsg = FirebaseDatabase.getInstance().getReference().child("ContactList").child(receiverId).child(userId).child("lastMessage");
         receiverRef.keepSynced(true);
 
         //Toolbar toolbar = (Toolbar) findViewById(R.id.fragment_chat_appBarLayout);
         //setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(Html.fromHtml("<font color=#FFFFFF>" + getIntent().getStringExtra("name") + "</font>"));
-        }
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.inflateMenu(R.menu.navigation);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        receiverIcon = (ImageView)findViewById(R.id.userIcon);
+        receiverName = (TextView) findViewById(R.id.userName);
+        receiverName.setText(getIntent().getStringExtra("name"));
+        String receiverIconUrl  = getIntent().getStringExtra("imageId");
+        Glide.with(getApplicationContext())
+                .load(receiverIconUrl)
+                .crossFade()
+                .thumbnail(0.5f)
+                .placeholder(R.mipmap.loading)
+                .bitmapTransform(new CircleTransform(getApplicationContext()))
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(receiverIcon);
         SenderName = getIntent().getStringExtra("name");
         recyclerView = (RecyclerView)findViewById(R.id.fragmentChatRecyclerView);
         attachmentIcon = (ImageView)findViewById(R.id.attachButton);
@@ -137,6 +155,8 @@ public class ChatConversationActivity extends AppCompatActivity {
                     map.put("sender", userId);
                     senderRef.push().setValue(map);
                     receiverRef.push().setValue(map);
+                    senderLastMsg.setValue(messageText);
+                    receiverLastMsg.setValue(messageText);
                     messageArea.setText("");
                     recyclerView.postDelayed(new Runnable() {
                         @Override public void run()
@@ -145,6 +165,9 @@ public class ChatConversationActivity extends AppCompatActivity {
 
                         }
                     }, 500);
+                }
+                else{
+                    Toast.makeText(getApplicationContext(),"Please Input Something!",Toast.LENGTH_SHORT).show();
                 }
             }
         });

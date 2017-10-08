@@ -14,12 +14,28 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class MainActivity extends AppCompatActivity implements CategoryListingFragment.SendMessage{
     public static int DeviceWidth;
+    public static String currenUserId;
+    private FirebaseAuth auth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() != null) {
+            currenUserId = auth.getCurrentUser().getUid();
+
+        }else{
+
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
+        }
+
+
         DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
         DeviceWidth = metrics.widthPixels;
 

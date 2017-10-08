@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        app:cardBackgroundColor="#dcdada"
+        app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="5dp"
         app:contentPadding="3dp"
         card_view:cardCornerRadius="5dp"
@@ -48,12 +48,12 @@
                 app:layout_constraintTop_toTopOf="@+id/chatPersonIcon" />
 
             <TextView
-                android:id="@+id/chatPersonEmail"
+                android:id="@+id/chatPersonLastMsg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="0dp"
                 android:layout_marginTop="8dp"
-                android:text="Email"
+                android:text="Hello"
                 app:layout_constraintLeft_toLeftOf="@+id/chatPersonName"
                 app:layout_constraintTop_toBottomOf="@+id/chatPersonName" />
         </android.support.constraint.ConstraintLayout>

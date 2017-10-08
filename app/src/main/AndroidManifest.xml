@@ -62,7 +62,7 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".ChatConversationActivity"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".EnlargeImageView"/>
     </application>
 
