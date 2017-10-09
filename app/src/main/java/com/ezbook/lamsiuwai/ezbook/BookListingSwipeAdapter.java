@@ -1,6 +1,9 @@
 package com.ezbook.lamsiuwai.ezbook;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +14,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.List;
 
@@ -41,10 +46,10 @@ public class BookListingSwipeAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = inflater.inflate(R.layout.booklisting_swipe,container,false);
-        ImageView img =(ImageView)v.findViewById(R.id.bookListingImage);
-        //Glide.with(context).load(bookImage.get(position).getImageURL()).into(img);
+        final ImageView img =(ImageView)v.findViewById(R.id.bookListingImage);
         Glide.with(context).load(bookImage.get(position).getImageURL()).crossFade().thumbnail(0.5f).placeholder(R.mipmap.loading).diskCacheStrategy(DiskCacheStrategy.ALL).into(img);
         container.addView(v);
+
         return v;
     }
 

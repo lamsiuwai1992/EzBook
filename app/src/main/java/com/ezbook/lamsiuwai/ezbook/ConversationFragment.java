@@ -123,7 +123,6 @@ public class ConversationFragment extends Fragment {
                                             intent.putExtra("imageId", retrieveUserIconUrl);
                                             intent.putExtra("name", retrieveName);
                                             intent.putExtra("retrieveId",retrieveId);
-
                                             startActivity(intent);
                                         }
                                     }
@@ -154,7 +153,7 @@ public class ConversationFragment extends Fragment {
     //View Holder For Recycler View
     public static class ShowChatListViewHolder extends RecyclerView.ViewHolder {
         private final TextView personName, personLastMsg;
-        private final ImageView personIcon;
+        private final ImageView personIcon , cameraIcon;
         private final LinearLayout layout;
         final LinearLayout.LayoutParams params;
 
@@ -163,6 +162,7 @@ public class ConversationFragment extends Fragment {
             personName = itemView.findViewById(R.id.chatPersonName);
             personLastMsg =itemView.findViewById(R.id.chatPersonLastMsg);
             personIcon = itemView.findViewById(R.id.chatPersonIcon);
+            cameraIcon = itemView.findViewById(R.id.chatPersonLastMsgIcon);
             layout = itemView.findViewById(R.id.show_chat_single_item_layout);
             params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         }
@@ -172,15 +172,14 @@ public class ConversationFragment extends Fragment {
             personName.setText(title);
         }
 
-        private void Layout_hide() {
-            params.height = 0;
-            layout.setLayoutParams(params);
-
-        }
-
 
         private void personLastMsg(String title) {
-            personLastMsg.setText(title);
+            if(title.equals("https")){
+                cameraIcon.setVisibility(View.VISIBLE);
+                personLastMsg.setVisibility(View.INVISIBLE);
+            }
+            else
+                personLastMsg.setText(title);
         }
 
 

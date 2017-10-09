@@ -154,7 +154,19 @@
                     android:paddingBottom="10dp"
                     android:paddingLeft="15dp"
                     android:text="@string/addPostPrice"
-                    android:layout_weight="0.5"
+                    android:layout_weight="2"
+                    android:gravity="left"
+                    android:textColor="@color/input_login_hint"
+                    android:textAppearance="?android:attr/textAppearanceMedium"  />
+                <TextView
+                    android:id="@+id/tvAddPostHKPrice"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="15dp"
+                    android:text="@string/addPostHKPrice"
+                    android:layout_weight="1"
                     android:gravity="left"
                     android:textColor="@color/input_login_hint"
                     android:textAppearance="?android:attr/textAppearanceMedium"  />

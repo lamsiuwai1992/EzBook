@@ -487,6 +487,8 @@ public class ChatConversationActivity extends AppCompatActivity {
                     map.put("sender", userId);
                     senderRef.push().setValue(map);
                     receiverRef.push().setValue(map);
+                    senderLastMsg.setValue("https");
+                    receiverLastMsg.setValue("https");
                     mProgressDialog.dismiss();
                 }
             });
@@ -516,7 +518,8 @@ public class ChatConversationActivity extends AppCompatActivity {
                         map.put("sender", userId);
                         senderRef.push().setValue(map);
                         receiverRef.push().setValue(map);
-
+                        senderLastMsg.setValue("https");
+                        receiverLastMsg.setValue("https");
                         mProgressDialog.dismiss();
                     }
                 });

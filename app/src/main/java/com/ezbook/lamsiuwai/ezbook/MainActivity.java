@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity implements CategoryListingFr
             currenUserId = auth.getCurrentUser().getUid();
 
         }else{
-
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
         }

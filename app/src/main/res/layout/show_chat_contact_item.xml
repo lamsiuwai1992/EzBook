@@ -54,8 +54,21 @@
                 android:layout_marginLeft="0dp"
                 android:layout_marginTop="8dp"
                 android:text="Hello"
+                android:maxLines="1"
+                android:visibility="visible"
                 app:layout_constraintLeft_toLeftOf="@+id/chatPersonName"
                 app:layout_constraintTop_toBottomOf="@+id/chatPersonName" />
+
+            <ImageView
+                android:id="@+id/chatPersonLastMsgIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0dp"
+                android:src="@drawable/ic_camera_alt_black_24dp"
+                android:visibility="gone"
+                app:layout_constraintLeft_toLeftOf="@+id/chatPersonName"
+                app:layout_constraintTop_toBottomOf="@+id/chatPersonName" />
+
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>

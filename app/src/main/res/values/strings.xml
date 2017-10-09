@@ -22,7 +22,7 @@
     <string name="hint_password">Password</string>
     <string name="hint_name">Fullname</string>
     <string name="btn_login">LOGIN</string>
-    <string name="btn_link_to_register">Rigister now!</string>
+    <string name="btn_link_to_register">Register now!</string>
     <string name="btn_link_to_login">Already registered. Login Me!</string>
     <string name="title_activity_reset_password">ResetPasswordActivity</string>
     <string name="btn_forgot_password">Forgot your password?</string>
@@ -46,10 +46,11 @@
     <string name="addPostDetail">Item Details</string>
     <string name="addPostBookName">Book Name</string>
     <string name="addPostPrice">Price</string>
+    <string name="addPostHKPrice">HKD $</string>
     <string name="addPostDesc">Description</string>
     <string name="submit">Submit</string>
     <string name="cancel">Cancel</string>
 
     <string name="action_settings">Settings</string>
-    <string name="title_activity_selection_list_activty">SelectionListActivty</string>
+    <string name="title_activity_selection_list_activty">Chosee Your Choice</string>
 </resources>

@@ -144,14 +144,15 @@ public class AddPostActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(checkFiledNonEmpty()){
+                    String bookId = bookObjectReference.push().getKey();
                     String bkName = bookName.getText().toString().trim();
                     String category = menuList.get(0).getSelection();
                     String bookType = menuList.get(1).getSelection();
                     int bkprice = Integer.parseInt(price.getText().toString().trim());
                     String bkDesc =bookDesc.getText().toString().trim();
                     String user = auth.getCurrentUser().getUid();
-                    BookObject newBookObject = new BookObject(bkName,imgList,user,bkprice,category,bookType,bkDesc);
-                    createNewBook(newBookObject);
+                    BookObject newBookObject = new BookObject(bookId,bkName,imgList,user,bkprice,category,bookType,bkDesc);
+                    createNewBook(newBookObject,bookId);
                 }else {
                     Toast.makeText(AddPostActivity.this, "Please Input Details and Upload at Least One Picture", Toast.LENGTH_LONG).show();
                 }
@@ -175,13 +176,12 @@ public class AddPostActivity extends AppCompatActivity {
 
     }
 
-    private void createNewBook(BookObject bookObject) {
+    private void createNewBook(BookObject bookObject,String bookId) {
         try{
             View view = this.getCurrentFocus();
             if(view!=null){
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(AddPostActivity.this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);}
-            String bookId = bookObjectReference.push().getKey();
             bookObjectReference.child(bookId).setValue(bookObject).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {

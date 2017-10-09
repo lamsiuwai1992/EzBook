@@ -77,6 +77,7 @@ public class CategoryListingFragment extends Fragment {
         DatabaseReference nssCategoryRef = database.getReference("category").child("nss");
         DatabaseReference secondaryCategoryRef = database.getReference("category").child("secondary");
         DatabaseReference primaryCategoryRef = database.getReference("category").child("primary");
+
         nssCategoryRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -176,7 +177,6 @@ public class CategoryListingFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
         try {
             SM = (SendMessage) getActivity();
         } catch (ClassCastException e) {

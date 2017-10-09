@@ -20,6 +20,15 @@ public class BookObject {
     private String bookType ;
     private String bookDescrpition;
     private String category;
+    private String bookId ;
+
+    public String getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(String bookId) {
+        this.bookId = bookId;
+    }
 
     public String getBookDescrpition() {
         return bookDescrpition;
@@ -94,9 +103,10 @@ public class BookObject {
         this.images = images;
     }
 
-    public BookObject(String bookName, List<AddPostImage> images, String bookOwner, int price, String category, String bookType,String bookDescrpition) {
+    public BookObject(String bookId ,String bookName, List<AddPostImage> images, String bookOwner, int price, String category, String bookType,String bookDescrpition) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
+        this.bookId = bookId;
         this.bookName = bookName;
         this.images = images;
         this.state = "Available";
