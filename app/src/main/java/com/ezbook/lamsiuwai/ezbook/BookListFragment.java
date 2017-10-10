@@ -3,28 +3,27 @@ package com.ezbook.lamsiuwai.ezbook;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.util.ArrayMap;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ImageView;
 
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by lamsiuwai on 18/9/2017.
@@ -41,6 +40,7 @@ public class BookListFragment extends Fragment {
     private RecyclerView bookListingView;
     private LinearLayoutManager mLayoutManager;
     private List<LikeBookObject> likeBookObjectList;
+    private ImageView bookListing_backBtn ;
 
     public static BookListFragment newInstance(String category , String bookType) {
         Bundle bundle = new Bundle();
@@ -74,8 +74,20 @@ public class BookListFragment extends Fragment {
         bookList = new ArrayList<>();
         creatorList = new ArrayList<>();
         likeBookObjectList =new ArrayList<>();
+        bookListing_backBtn = (ImageView)view.findViewById(R.id.bookListing_backBtn);
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbarBooklisting);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+
         Log.d("Categories",category);
         Log.d("BookType",bookType);
+        bookListing_backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fm = getActivity()
+                        .getSupportFragmentManager();
+                fm.popBackStack ("booklisting", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            }
+        });
         DatabaseReference bookUpload = database.getReference("BookUpload");
         Query query = bookUpload.orderByChild("category").equalTo(category);
         DatabaseReference userLikeBookRef =database.getReference("LikeBook").child(MainActivity.currenUserId);

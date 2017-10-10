@@ -32,6 +32,7 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -72,10 +73,9 @@ public class ChatConversationActivity extends AppCompatActivity {
     static String SenderName;
     private FirebaseAuth auth;
     private String userId;
-
-    ImageView attachmentIcon,sendIcon,no_data_available_image,receiverIcon;
-    EditText messageArea;
-    TextView no_chat,receiverName;
+    private ImageView attachmentIcon,sendIcon,no_data_available_image,receiverIcon , conversation_backBtn;
+    private EditText messageArea;
+    private TextView no_chat,receiverName;
 
     private static final int GALLERY_INTENT = 2;
     private ProgressDialog mProgressDialog;
@@ -109,14 +109,9 @@ public class ChatConversationActivity extends AppCompatActivity {
         receiverLastMsg = FirebaseDatabase.getInstance().getReference().child("ContactList").child(receiverId).child(userId).child("lastMessage");
         receiverRef.keepSynced(true);
 
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.fragment_chat_appBarLayout);
-        //setSupportActionBar(toolbar);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.inflateMenu(R.menu.navigation);
         setSupportActionBar(toolbar);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
         receiverIcon = (ImageView)findViewById(R.id.userIcon);
         receiverName = (TextView) findViewById(R.id.userName);
         receiverName.setText(getIntent().getStringExtra("name"));
@@ -141,9 +136,15 @@ public class ChatConversationActivity extends AppCompatActivity {
         mLinearLayoutManager = new LinearLayoutManager(ChatConversationActivity.this);
         recyclerView.setLayoutManager(mLinearLayoutManager);
         mLinearLayoutManager.setStackFromEnd(true);
-
+        conversation_backBtn = (ImageView) findViewById(R.id.conversation_backBtn);
         ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
 
+        conversation_backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         sendIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -336,7 +337,7 @@ public class ChatConversationActivity extends AppCompatActivity {
         });
     }
 
-
+    /*
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -349,7 +350,7 @@ public class ChatConversationActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
+    }*/
 
 
 

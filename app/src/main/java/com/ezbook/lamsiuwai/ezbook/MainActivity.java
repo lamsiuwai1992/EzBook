@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements CategoryListingFr
         Log.d("bookType",bookType);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_layout, BookListFragment.newInstance(category,bookType));
+        transaction.addToBackStack("booklisting");
         transaction.commit();
 
     }

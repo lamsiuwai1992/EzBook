@@ -3,7 +3,33 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbarBooklisting"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@color/white"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme">
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:id="@+id/custom_toolbar_layout"
+            android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:id="@+id/bookListing_backBtn"
+            android:gravity="left"
+            android:src="@mipmap/back_icon" />
+        </LinearLayout>
+
+    </android.support.v7.widget.Toolbar>
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_below="@+id/toolbarBooklisting"
         android:id="@+id/bookListingScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
