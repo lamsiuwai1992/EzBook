@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<android.support.design.widget.CoordinatorLayout
+    android:id="@+id/main_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbarBooklisting"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="wrap_content"
         android:background="@color/white"
         android:minHeight="?attr/actionBarSize"
+        app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:layout_scrollFlags="scroll|enterAlways"
         android:theme="?attr/actionBarTheme">
+
 
         <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -28,24 +37,12 @@
         </LinearLayout>
 
     </android.support.v7.widget.Toolbar>
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_below="@+id/toolbarBooklisting"
-        android:id="@+id/bookListingScrollView"
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:clipToPadding="false"
+        android:id="@+id/rvBookListing"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:scrollbars="none" >
-            <RelativeLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                >
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rvBookListing"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-
-
-            </RelativeLayout>
-    </ScrollView>
-</RelativeLayout>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+</android.support.design.widget.CoordinatorLayout>

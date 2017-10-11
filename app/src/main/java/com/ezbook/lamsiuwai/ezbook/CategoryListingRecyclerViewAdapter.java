@@ -20,7 +20,6 @@ import java.util.List;
 public class CategoryListingRecyclerViewAdapter extends RecyclerView.Adapter<CategoryListingRecyclerViewAdapter.ViewHolder> {
         private Context context;
         private List<SubjectImage> listImage;
-        private LayoutInflater mInflater;
         private ItemClickListener mClickListener;
 
 
@@ -28,14 +27,14 @@ public class CategoryListingRecyclerViewAdapter extends RecyclerView.Adapter<Cat
 
         public CategoryListingRecyclerViewAdapter(Context context, List<SubjectImage> objects) {
             this.context=context;
-            this.mInflater = LayoutInflater.from(context);
             listImage = objects;
         }
 
         // inflates the row layout from xml when needed
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = mInflater.inflate(R.layout.categorylisting_recyclerview_item, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.categorylisting_recyclerview_item, parent, false);
+            //View view = mInflater.inflate(R.layout.categorylisting_recyclerview_item, parent, false);
             ViewHolder viewHolder = new ViewHolder(view);
             return viewHolder;
         }

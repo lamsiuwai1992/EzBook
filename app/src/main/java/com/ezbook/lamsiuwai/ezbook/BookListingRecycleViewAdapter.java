@@ -35,7 +35,6 @@ import com.bumptech.glide.Glide;
 public class BookListingRecycleViewAdapter extends RecyclerView.Adapter<BookListingRecycleViewAdapter.ViewHolder> {
     private Context context;
     private List<BookObject> bookList;
-    private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private List<UserObject> userObjectList;
     private List<LikeBookObject> likeBookObjectList;
@@ -46,7 +45,6 @@ public class BookListingRecycleViewAdapter extends RecyclerView.Adapter<BookList
     // data is passed into the constructor
     public BookListingRecycleViewAdapter(Context context, List<BookObject> bookList,List<UserObject>userObjectList,List<LikeBookObject>likeBookObjectList) {
         this.context=context;
-        this.mInflater = LayoutInflater.from(context);
         this.bookList = bookList;
         this.userObjectList =userObjectList;
         this.likeBookObjectList = likeBookObjectList;
@@ -57,7 +55,8 @@ public class BookListingRecycleViewAdapter extends RecyclerView.Adapter<BookList
     // inflates the row layout from xml when needed
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.book_listing_row, parent, false);
+        //View view = mInflater.inflate(R.layout.book_listing_row, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.book_listing_row, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
