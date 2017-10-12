@@ -44,6 +44,7 @@ public class ConversationFragment extends Fragment {
     private RecyclerView recyclerView;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference currentContactListRef;
+    private DatabaseReference currentChatListRef;
     private DatabaseReference userListRef;
     public FirebaseRecyclerAdapter<ShowChatListObject, ShowChatListViewHolder> mFirebaseAdapter;
     private ProgressBar progressBar;
@@ -68,6 +69,7 @@ public class ConversationFragment extends Fragment {
         firebaseDatabase = FirebaseDatabase.getInstance();
 
         currentContactListRef = firebaseDatabase.getReference("ContactList").child(MainActivity.currenUserId);
+        currentChatListRef = firebaseDatabase.getReference("Chat").child(MainActivity.currenUserId);
         userListRef = firebaseDatabase.getReference("Users");
         progressBar = view.findViewById(R.id.show_chat_progressBar);
         contactlist_no_contact = view.findViewById(R.id.contactlist_no_contact);
@@ -119,10 +121,11 @@ public class ConversationFragment extends Fragment {
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 //Remove swiped item from list and notify the RecyclerView
                 int position = viewHolder.getAdapterPosition();
-                Toast.makeText(getContext(), "on Swiped "+position, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "on Swiped "+position, Toast.LENGTH_SHORT).show();
                 String key = mFirebaseAdapter.getRef(position).getKey();
                 Log.d("Key ",key);
                 currentContactListRef.child(key).setValue(null);
+                currentChatListRef.child(key).removeValue();
                 //currentContactListRef.getRef(position).getKey();
                 //mFirebaseAdapter.notifyDataSetChanged();
 
@@ -160,6 +163,7 @@ public class ConversationFragment extends Fragment {
             public void populateViewHolder(final ShowChatListViewHolder viewHolder, final ShowChatListObject model, final int position) {
 
                 progressBar.setVisibility(ProgressBar.INVISIBLE);
+                contactlist_no_contact.setVisibility(View.INVISIBLE);
                 String userKey = getRef(position).getKey();
                 Log.d ("contactList" ,this.getRef(position).getKey());
                 userListRef.child(userKey).addValueEventListener(new ValueEventListener() {

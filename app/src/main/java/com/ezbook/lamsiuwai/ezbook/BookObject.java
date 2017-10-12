@@ -21,6 +21,7 @@ public class BookObject {
     private String bookDescrpition;
     private String category;
     private String bookId ;
+    private String searchBookName;
 
     public String getBookId() {
         return bookId;
@@ -36,6 +37,15 @@ public class BookObject {
 
     public void setBookDescrpition(String bookDescrpition) {
         this.bookDescrpition = bookDescrpition;
+    }
+
+
+    public String getSearchBookName() {
+        return searchBookName;
+    }
+
+    public void setSearchBookName(String searchBookName) {
+        this.searchBookName = searchBookName;
     }
 
     public String getCreateTime() {
@@ -103,7 +113,7 @@ public class BookObject {
         this.images = images;
     }
 
-    public BookObject(String bookId ,String bookName, List<AddPostImage> images, String bookOwner, int price, String category, String bookType,String bookDescrpition) {
+    public BookObject(String bookId ,String bookName, List<AddPostImage> images, String bookOwner, int price, String category, String bookType,String bookDescrpition ,String searchBookName) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
         this.bookId = bookId;
@@ -116,6 +126,7 @@ public class BookObject {
         this.bookType = bookType;
         this.createTime = dateFormat.format(date);
         this.bookDescrpition = bookDescrpition;
+        this.searchBookName = searchBookName.toLowerCase();
     }
     public BookObject(){
 

@@ -151,7 +151,7 @@ public class AddPostActivity extends AppCompatActivity {
                     int bkprice = Integer.parseInt(price.getText().toString().trim());
                     String bkDesc =bookDesc.getText().toString().trim();
                     String user = auth.getCurrentUser().getUid();
-                    BookObject newBookObject = new BookObject(bookId,bkName,imgList,user,bkprice,category,bookType,bkDesc);
+                    BookObject newBookObject = new BookObject(bookId,bkName,imgList,user,bkprice,category,bookType,bkDesc,bkName);
                     createNewBook(newBookObject,bookId);
                 }else {
                     Toast.makeText(AddPostActivity.this, "Please Input Details and Upload at Least One Picture", Toast.LENGTH_LONG).show();

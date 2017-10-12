@@ -16,7 +16,7 @@ import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-public class MainActivity extends AppCompatActivity implements CategoryListingFragment.SendMessage{
+public class MainActivity extends AppCompatActivity implements CategoryListingFragment.SendMessage , CategoryListingFragment.SendQueryResult {
     public static int DeviceWidth;
     public static String currenUserId;
     private FirebaseAuth auth;
@@ -89,8 +89,17 @@ public class MainActivity extends AppCompatActivity implements CategoryListingFr
         Log.d("bookType",bookType);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_layout, BookListFragment.newInstance(category,bookType));
-        transaction.addToBackStack("booklisting");
+        transaction.addToBackStack(null);
         transaction.commit();
 
+    }
+
+    @Override
+    public void sendResult(String bookName) {
+        Log.d("bookName",bookName);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame_layout, BookSearchResultFragment.newInstance(bookName));
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }

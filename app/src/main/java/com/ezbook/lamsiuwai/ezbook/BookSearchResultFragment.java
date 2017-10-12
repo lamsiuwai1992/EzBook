@@ -29,12 +29,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by lamsiuwai on 18/9/2017.
+ * Created by lamsiuwai on 12/10/2017.
  */
 
-public class BookListFragment extends Fragment {
-    private String category;
-    private String bookType;
+public class BookSearchResultFragment extends Fragment {
+    private String bookName;
     private FirebaseApp app;
     private FirebaseDatabase database;
     private List<BookObject> bookList;
@@ -45,12 +44,11 @@ public class BookListFragment extends Fragment {
     private List<LikeBookObject> likeBookObjectList;
     private ImageView bookListing_backBtn ;
 
-    public static BookListFragment newInstance(String category , String bookType) {
+    public static BookSearchResultFragment newInstance(String bookName) {
         Bundle bundle = new Bundle();
-        bundle.putString("category", category);
-        bundle.putString("bookType",bookType);
+        bundle.putString("bookName", bookName);
 
-        BookListFragment fragment = new BookListFragment();
+        BookSearchResultFragment fragment = new BookSearchResultFragment();
         fragment.setArguments(bundle);
 
         return fragment;
@@ -59,8 +57,7 @@ public class BookListFragment extends Fragment {
 
     private void readBundle(Bundle bundle) {
         if (bundle != null) {
-            category = bundle.getString("category");
-            bookType = bundle.getString("bookType");
+            bookName = bundle.getString("bookName");
         }
     }
     @Override
@@ -82,8 +79,8 @@ public class BookListFragment extends Fragment {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbarBooklisting);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
-        Log.d("Categories",category);
-        Log.d("BookType",bookType);
+        Log.d("bookName",bookName);
+
         bookListing_backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,7 +90,7 @@ public class BookListFragment extends Fragment {
             }
         });
         DatabaseReference bookUpload = database.getReference("BookUpload");
-        Query query = bookUpload.orderByChild("category").equalTo(category);
+        Query query = bookUpload.orderByChild("searchBookName").startAt(null,bookName).endAt(bookName+"\uf8ff");
         DatabaseReference userLikeBookRef =database.getReference("LikeBook").child(MainActivity.currenUserId);
         userLikeBookRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -118,44 +115,44 @@ public class BookListFragment extends Fragment {
                 creatorList.clear();
                 for (DataSnapshot bookObjectSnapshot : dataSnapshot.getChildren()) {
                     BookObject bookObject = bookObjectSnapshot.getValue(BookObject.class);
-                    if((bookObject.getBookType().equals(bookType)&&(bookObject.getState().equals("Available")))){
+                    if(bookObject.getState().equals("Available")){
                         final String creatorId = bookObject.getBookOwner();
-                            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
-                            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    for(DataSnapshot userObj:dataSnapshot.getChildren()){
-                                        if(userObj.getKey().equals(creatorId)){
-                                            Log.d("Creator:",creatorId);
-                                            UserObject userObject = userObj.getValue(UserObject.class);
-                                            creatorList.add(userObject);
+                        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
+                        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for(DataSnapshot userObj:dataSnapshot.getChildren()){
+                                    if(userObj.getKey().equals(creatorId)){
+                                        Log.d("Creator:",creatorId);
+                                        UserObject userObject = userObj.getValue(UserObject.class);
+                                        creatorList.add(userObject);
 
-                                        }
                                     }
-                                    mLayoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
-                                    mLayoutManager.setStackFromEnd(true);
-                                    mLayoutManager.setReverseLayout(true);
-                                    bookListingView = view.findViewById(R.id.rvBookListing);
-                                    bookListingView.setLayoutManager(mLayoutManager);
-                                    while (bookList.size()!=creatorList.size()){
-                                        // avoid crashing the program
-                                        Log.d("book size", String.valueOf(bookList.size()));
-                                        Log.d("creator size", String.valueOf(creatorList.size()));
-                                        return;
-                                    }
-                                    bookListingAdapter = new BookListingRecycleViewAdapter(getActivity(), bookList,creatorList,likeBookObjectList);
-                                    bookListingView.setAdapter(bookListingAdapter);
-
-
                                 }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-
+                                mLayoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
+                                mLayoutManager.setStackFromEnd(true);
+                                mLayoutManager.setReverseLayout(true);
+                                bookListingView = view.findViewById(R.id.rvBookListing);
+                                bookListingView.setLayoutManager(mLayoutManager);
+                                while (bookList.size()!=creatorList.size()){
+                                    // avoid crashing the program
+                                    Log.d("book size", String.valueOf(bookList.size()));
+                                    Log.d("creator size", String.valueOf(creatorList.size()));
+                                    return;
                                 }
+                                bookListingAdapter = new BookListingRecycleViewAdapter(getActivity(), bookList,creatorList,likeBookObjectList);
+                                bookListingView.setAdapter(bookListingAdapter);
 
-                            });
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+
+                            }
+
+                        });
                         bookList.add(bookObject);
                     }
                 }
