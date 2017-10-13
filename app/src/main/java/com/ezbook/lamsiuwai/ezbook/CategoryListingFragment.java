@@ -84,7 +84,6 @@ public class CategoryListingFragment extends Fragment {
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("EzBook");
         toolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
-
         searchView = (MaterialSearchView)view.findViewById(R.id.search_view);
         searchView.setHint("Enter the name of the books");
         searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {

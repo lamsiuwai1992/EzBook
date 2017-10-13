@@ -42,7 +42,6 @@ public class BookSearchResultFragment extends Fragment {
     private RecyclerView bookListingView;
     private LinearLayoutManager mLayoutManager;
     private List<LikeBookObject> likeBookObjectList;
-    private ImageView bookListing_backBtn ;
 
     public static BookSearchResultFragment newInstance(String bookName) {
         Bundle bundle = new Bundle();
@@ -75,13 +74,11 @@ public class BookSearchResultFragment extends Fragment {
         bookList = new ArrayList<>();
         creatorList = new ArrayList<>();
         likeBookObjectList =new ArrayList<>();
-        bookListing_backBtn = (ImageView)view.findViewById(R.id.bookListing_backBtn);
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbarBooklisting);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-
+        toolbar.setNavigationIcon(R.drawable.ic_action_navigation_arrow_back_inverted);
         Log.d("bookName",bookName);
-
-        bookListing_backBtn.setOnClickListener(new View.OnClickListener() {
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FragmentManager fm = getActivity()

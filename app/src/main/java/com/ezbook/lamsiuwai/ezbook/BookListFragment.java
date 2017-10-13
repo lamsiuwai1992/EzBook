@@ -24,6 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,11 +40,11 @@ public class BookListFragment extends Fragment {
     private FirebaseDatabase database;
     private List<BookObject> bookList;
     private List<UserObject> creatorList;
+    private List<LikeBookObject> likeBookObjectList;
     private BookListingRecycleViewAdapter bookListingAdapter;
     private RecyclerView bookListingView;
     private LinearLayoutManager mLayoutManager;
-    private List<LikeBookObject> likeBookObjectList;
-    private ImageView bookListing_backBtn ;
+    private MaterialSearchView searchView;
 
     public static BookListFragment newInstance(String category , String bookType) {
         Bundle bundle = new Bundle();
@@ -69,7 +70,7 @@ public class BookListFragment extends Fragment {
 
 
     }
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         readBundle(getArguments());
         final View view = inflater.inflate(R.layout.fragment_booklisting, container, false);
@@ -78,18 +79,60 @@ public class BookListFragment extends Fragment {
         bookList = new ArrayList<>();
         creatorList = new ArrayList<>();
         likeBookObjectList =new ArrayList<>();
-        bookListing_backBtn = (ImageView)view.findViewById(R.id.bookListing_backBtn);
+        setHasOptionsMenu(true);
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbarBooklisting);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-
-        Log.d("Categories",category);
-        Log.d("BookType",bookType);
-        bookListing_backBtn.setOnClickListener(new View.OnClickListener() {
+        toolbar.setNavigationIcon(R.drawable.ic_action_navigation_arrow_back_inverted);
+        searchView = (MaterialSearchView)view.findViewById(R.id.search_view);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FragmentManager fm = getActivity()
                         .getSupportFragmentManager();
-                fm.popBackStack();
+                        fm.popBackStack();
+            }
+        });
+        Log.d("Categories",category);
+        Log.d("BookType",bookType);
+        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+
+                BookListingRecycleViewAdapter bookListingAdapter = new BookListingRecycleViewAdapter(getActivity(), bookList,creatorList,likeBookObjectList);
+                bookListingView.setAdapter(bookListingAdapter);
+                Log.d("On Close Book Size", String.valueOf(bookList.size()));
+            }
+        });
+
+        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if(newText != null && !newText.isEmpty()){
+                    List<BookObject> tempBookList = new ArrayList<BookObject>();
+                    List<UserObject> tempCreatorList = new ArrayList<UserObject>();
+                    for(int i = 0 ; i <= (bookList.size()-1);i++){
+                        if(bookList.get(i).getSearchBookName().contains(newText)){
+                            tempBookList.add(bookList.get(i));
+                            tempCreatorList.add(creatorList.get(i));
+                        }
+                    }
+
+                    BookListingRecycleViewAdapter bookListingAdapter = new BookListingRecycleViewAdapter(getActivity(), tempBookList,tempCreatorList,likeBookObjectList);
+                    bookListingView.setAdapter(bookListingAdapter);
+                    return true;
+                }
+                return false;
             }
         });
         DatabaseReference bookUpload = database.getReference("BookUpload");
@@ -170,6 +213,13 @@ public class BookListFragment extends Fragment {
 
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_item,menu);
+        MenuItem item = menu.findItem(R.id.action_search);
+        searchView.setMenuItem(item);
     }
 
 

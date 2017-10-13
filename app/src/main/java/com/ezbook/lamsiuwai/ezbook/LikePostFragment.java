@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
@@ -55,9 +56,8 @@ public class LikePostFragment extends Fragment {
         bookList = new ArrayList<>();
         creatorList = new ArrayList<>();
         likeBookObjectList =new ArrayList<>();
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbarBooklisting);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-        toolbar.setVisibility(View.GONE);
+        FrameLayout toolbarLayout = view.findViewById(R.id.toolbar_container);
+        toolbarLayout.setVisibility(View.GONE);
         final DatabaseReference bookUpload = database.getReference("BookUpload");
         DatabaseReference userLikeBookRef =database.getReference("LikeBook").child(MainActivity.currenUserId);
         userLikeBookRef.addListenerForSingleValueEvent(new ValueEventListener() {

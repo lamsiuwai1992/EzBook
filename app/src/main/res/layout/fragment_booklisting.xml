@@ -1,47 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<RelativeLayout
     android:id="@+id/main_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appBar"
+    <FrameLayout
+        android:id="@+id/toolbar_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbarBooklisting"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="@color/colorPrimaryDark"
         android:minHeight="?attr/actionBarSize"
-        app:layout_scrollFlags="scroll|enterAlways"
-        android:theme="?attr/actionBarTheme">
+        android:theme="?attr/actionBarTheme" />
 
-
-        <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:id="@+id/custom_toolbar_layout"
-            android:layout_height="wrap_content">
-
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:id="@+id/bookListing_backBtn"
-            android:gravity="left"
-            android:src="@mipmap/back_icon" />
-        </LinearLayout>
-
-    </android.support.v7.widget.Toolbar>
-    </android.support.design.widget.AppBarLayout>
+        <com.miguelcatalan.materialsearchview.MaterialSearchView
+            android:id="@+id/search_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFF"
+            app:searchBackIcon="@mipmap/ic_action_navigation_arrow_back_inverted"
+            app:searchBackground="@color/colorPrimaryDark"
+            app:searchCloseIcon="@mipmap/ic_action_navigation_close_inverted"
+            app:searchSuggestionBackground="@color/colorPrimaryDark"
+            app:searchSuggestionIcon="@mipmap/ic_action_navigation_arrow_back_inverted" />
+    </FrameLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:clipToPadding="false"
         android:id="@+id/rvBookListing"
+        android:layout_below="@+id/toolbar_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-</android.support.design.widget.CoordinatorLayout>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+</RelativeLayout>
