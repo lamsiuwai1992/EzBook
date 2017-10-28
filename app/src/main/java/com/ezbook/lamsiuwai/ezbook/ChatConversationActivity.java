@@ -6,6 +6,7 @@ package com.ezbook.lamsiuwai.ezbook;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -67,7 +68,7 @@ public class ChatConversationActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     FirebaseDatabase firebaseDatabase;
-    DatabaseReference senderRef,receiverRef,senderLastMsg , receiverLastMsg;
+    DatabaseReference senderRef,receiverRef,senderLastMsg , receiverLastMsg ,notificationRef;
     private FirebaseRecyclerAdapter<ShowChatCoversationObject, ChatConversationViewHolder> mFirebaseAdapter;
     public LinearLayoutManager mLinearLayoutManager;
     static String SenderName;
@@ -97,7 +98,7 @@ public class ChatConversationActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         userId = auth.getCurrentUser().getUid();
-        String receiverId =getIntent().getStringExtra("retrieveId");
+        final String receiverId = getIntent().getStringExtra("retrieveId");
         firebaseDatabase = FirebaseDatabase.getInstance();
         senderRef = FirebaseDatabase.getInstance().getReference().child("Chat").child(userId).child(receiverId);
         senderRef.keepSynced(true);
@@ -109,6 +110,7 @@ public class ChatConversationActivity extends AppCompatActivity {
         receiverLastMsg = FirebaseDatabase.getInstance().getReference().child("ContactList").child(receiverId).child(userId).child("lastMessage");
         receiverRef.keepSynced(true);
 
+        notificationRef =FirebaseDatabase.getInstance().getReference().child("Notifications");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.inflateMenu(R.menu.navigation);
         setSupportActionBar(toolbar);
@@ -154,6 +156,8 @@ public class ChatConversationActivity extends AppCompatActivity {
                     ArrayMap<String, String> map = new ArrayMap<>();
                     map.put("message", messageText);
                     map.put("sender", userId);
+                    NotificationObject notificationObject = new NotificationObject(messageText,userId,receiverId);
+                    notificationRef.push().setValue(notificationObject);
                     senderRef.push().setValue(map);
                     receiverRef.push().setValue(map);
                     senderLastMsg.setValue(messageText);
@@ -162,7 +166,7 @@ public class ChatConversationActivity extends AppCompatActivity {
                     recyclerView.postDelayed(new Runnable() {
                         @Override public void run()
                         {
-                            recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount()-1);
+                            recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount());
 
                         }
                     }, 500);
@@ -249,8 +253,81 @@ public class ChatConversationActivity extends AppCompatActivity {
 
             public void populateViewHolder(final ChatConversationViewHolder viewHolder, ShowChatCoversationObject model, final int position) {
 
-                viewHolder.getSender(model.getSender());
-                viewHolder.getMessage(model.getMessage());
+                //viewHolder.getSender(model.getSender());
+                //viewHolder.getMessage(model.getMessage());
+
+                if(model.getSender().equals(viewHolder.senderId))
+                {   //messgae send from user
+                    viewHolder.params.setMargins((MainActivity.DeviceWidth/3),5,10,10);
+                    viewHolder.text_params.setMargins(15,10,0,5);
+                    viewHolder.sender.setLayoutParams(viewHolder.text_params);
+                    viewHolder.mView.setLayoutParams(viewHolder.params);
+                    viewHolder.mView.setBackgroundResource(R.drawable.shape_outcoming_message);
+                    viewHolder.sender.setText("YOU");
+                    viewHolder.chat_image_outgoing.setVisibility(View.VISIBLE);
+                    viewHolder.chat_image_incoming.setVisibility(View.GONE);
+
+                }
+                else
+                {   //message send from others
+                    viewHolder.params.setMargins(10,0,(MainActivity.DeviceWidth/3),10);
+                    viewHolder.sender.setGravity(Gravity.START);
+                    viewHolder.text_params.setMargins(60,10,0,5);
+                    viewHolder.sender.setLayoutParams(viewHolder.text_params);
+                    viewHolder.mView.setLayoutParams(viewHolder.params);
+                    viewHolder.mView.setBackgroundResource(R.drawable.shape_incoming_message);
+                    viewHolder.sender.setText(SenderName);
+                    viewHolder.chat_image_outgoing.setVisibility(View.GONE);
+                    viewHolder.chat_image_incoming.setVisibility(View.VISIBLE);
+                }
+
+                if(!model.getMessage().startsWith("https"))
+                {
+
+                    if(!viewHolder.sender.getText().equals(SenderName))
+                    {
+                        viewHolder.text_params.setMargins(15,10,22,15);
+                    }
+                    else
+                    {
+                        viewHolder.text_params.setMargins(65,10,22,15);
+                    }
+
+                    viewHolder.message.setLayoutParams(viewHolder.text_params);
+                    viewHolder.message.setText(model.getMessage());
+                    viewHolder.message.setTextColor(Color.parseColor("#FFFFFF"));
+                    viewHolder.message.setVisibility(View.VISIBLE);
+                    viewHolder.chat_image_incoming.setVisibility(View.GONE);
+                    viewHolder.chat_image_outgoing.setVisibility(View.GONE);
+                }
+                else
+                {
+                    if (viewHolder.chat_image_outgoing.getVisibility()==View.VISIBLE && viewHolder.chat_image_incoming.getVisibility()==View.GONE)
+                    {
+                        viewHolder.chat_image_outgoing.setVisibility(View.VISIBLE);
+                        viewHolder.message.setVisibility(View.GONE);
+                        Glide.with(getApplicationContext())
+                                .load(model.getMessage())
+                                .crossFade()
+                                .fitCenter()
+                                .placeholder(R.mipmap.loading)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(viewHolder.chat_image_outgoing);
+                    }
+                    else
+                    {
+                        viewHolder.chat_image_incoming.setVisibility(View.VISIBLE);
+                        viewHolder.message.setVisibility(View.GONE);
+                        Glide.with(viewHolder.itemView.getContext())
+                                .load(model.getMessage())
+                                .crossFade()
+                                .fitCenter()
+                                .placeholder(R.mipmap.loading)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(viewHolder.chat_image_incoming);
+                    }
+                }
+
 
 
                 viewHolder.mView.setOnClickListener(new View.OnClickListener() {
@@ -303,7 +380,7 @@ public class ChatConversationActivity extends AppCompatActivity {
                     recyclerView.postDelayed(new Runnable() {
                         @Override public void run()
                         {
-                            recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount()-1);
+                            recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount());
                         }
                     }, 500);
                     recyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
@@ -315,7 +392,7 @@ public class ChatConversationActivity extends AppCompatActivity {
                                 recyclerView.postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount() - 1);
+                                        recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount());
                                     }
                                 }, 100);
                             }
@@ -355,13 +432,13 @@ public class ChatConversationActivity extends AppCompatActivity {
 
 
     //View Holder For Recycler View
-    public static class ChatConversationViewHolder extends RecyclerView.ViewHolder {
+    public static   class ChatConversationViewHolder extends RecyclerView.ViewHolder {
         private FirebaseAuth auth;
         private final TextView message, sender;
-        private String senderId ;
-        private final ImageView chat_image_incoming,chat_image_outgoing;
-        View mView;
-        final LinearLayout.LayoutParams params,text_params;
+        private String senderId;
+        private final ImageView chat_image_incoming, chat_image_outgoing;
+        final View mView;
+        final LinearLayout.LayoutParams params, text_params;
         LinearLayout layout;
 
         public ChatConversationViewHolder(final View itemView) {
@@ -369,7 +446,7 @@ public class ChatConversationActivity extends AppCompatActivity {
             //Log.d("LOGGED", "ON Chat_Conversation_ViewHolder : " );
             mView = itemView;
             message = mView.findViewById(R.id.fetch_chat_messgae);
-            sender =  mView.findViewById(R.id.fetch_chat_sender);
+            sender = mView.findViewById(R.id.fetch_chat_sender);
             chat_image_incoming = mView.findViewById(R.id.chat_uploaded_image_incoming);
             chat_image_outgoing = mView.findViewById(R.id.chat_uploaded_image_outgoing);
             auth = FirebaseAuth.getInstance();
@@ -379,87 +456,6 @@ public class ChatConversationActivity extends AppCompatActivity {
             text_params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             layout = mView.findViewById(R.id.chat_linear_layout);
         }
-
-        private void getSender(String title) {
-
-
-            if(title.equals(senderId))
-            {   //messgae send from user
-                params.setMargins((MainActivity.DeviceWidth/3),5,10,10);
-                text_params.setMargins(15,10,0,5);
-                sender.setLayoutParams(text_params);
-                mView.setLayoutParams(params);
-                mView.setBackgroundResource(R.drawable.shape_outcoming_message);
-                sender.setText("YOU");
-                chat_image_outgoing.setVisibility(View.VISIBLE);
-                chat_image_incoming.setVisibility(View.GONE);
-
-            }
-            else
-            {   //message send from others
-                params.setMargins(10,0,(MainActivity.DeviceWidth/3),10);
-                sender.setGravity(Gravity.START);
-                text_params.setMargins(60,10,0,5);
-                sender.setLayoutParams(text_params);
-                mView.setLayoutParams(params);
-                mView.setBackgroundResource(R.drawable.shape_incoming_message);
-                sender.setText(SenderName);
-                chat_image_outgoing.setVisibility(View.GONE);
-                chat_image_incoming.setVisibility(View.VISIBLE);
-            }
-        }
-
-        private void getMessage(String title) {
-
-            if(!title.startsWith("https"))
-            {
-
-                if(!sender.getText().equals(SenderName))
-                {
-                    text_params.setMargins(15,10,22,15);
-                }
-                else
-                {
-                    text_params.setMargins(65,10,22,15);
-                }
-
-                message.setLayoutParams(text_params);
-                message.setText(title);
-                message.setTextColor(Color.parseColor("#FFFFFF"));
-                message.setVisibility(View.VISIBLE);
-                chat_image_incoming.setVisibility(View.GONE);
-                chat_image_outgoing.setVisibility(View.GONE);
-            }
-            else
-            {
-                if (chat_image_outgoing.getVisibility()==View.VISIBLE && chat_image_incoming.getVisibility()==View.GONE)
-                {
-                    chat_image_outgoing.setVisibility(View.VISIBLE);
-                    message.setVisibility(View.GONE);
-                    Glide.with(itemView.getContext())
-                            .load(title)
-                            .crossFade()
-                            .fitCenter()
-                            .placeholder(R.mipmap.loading)
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .into(chat_image_outgoing);
-                }
-                else
-                {
-                    chat_image_incoming.setVisibility(View.VISIBLE);
-                    message.setVisibility(View.GONE);
-                    Glide.with(itemView.getContext())
-                            .load(title)
-                            .crossFade()
-                            .fitCenter()
-                            .placeholder(R.mipmap.loading)
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .into(chat_image_incoming);
-                }
-            }
-
-        }
-
     }
 
     @Override
@@ -534,12 +530,6 @@ public class ChatConversationActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        //Glide.clear(imageView);
-        Glide.get(getApplicationContext()).clearMemory();
-    }
 
     private void callCamera() {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -578,5 +568,12 @@ public class ChatConversationActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //Glide.clear(imageView);
+        Glide.get(getApplicationContext()).clearMemory();
     }
 }

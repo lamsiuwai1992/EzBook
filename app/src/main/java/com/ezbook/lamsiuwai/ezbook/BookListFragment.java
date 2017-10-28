@@ -122,7 +122,7 @@ public class BookListFragment extends Fragment {
                     List<BookObject> tempBookList = new ArrayList<BookObject>();
                     List<UserObject> tempCreatorList = new ArrayList<UserObject>();
                     for(int i = 0 ; i <= (bookList.size()-1);i++){
-                        if(bookList.get(i).getSearchBookName().contains(newText)){
+                        if(bookList.get(i).getSearchBookName().contains(newText.toLowerCase())){
                             tempBookList.add(bookList.get(i));
                             tempCreatorList.add(creatorList.get(i));
                         }

@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity implements CategoryListingFr
             finish();
         }
 
+        String menuFragment = getIntent().getStringExtra("menuFragment");
+
 
         DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
         DeviceWidth = metrics.widthPixels;
@@ -76,8 +78,13 @@ public class MainActivity extends AppCompatActivity implements CategoryListingFr
         //Manually displaying the first fragment - one time only
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_layout, CategoryListingFragment.newInstance());
+        if (menuFragment != null) {
+            if (menuFragment.equals("showChatList")) {
+                Fragment showChatListFragment = ConversationFragment.newInstance();
+                transaction.replace(R.id.frame_layout, showChatListFragment);
+            }
+        }
         transaction.commit();
-
         //Used to select an item programmatically
         //bottomNavigationView.getMenu().getItem(2).setChecked(true);
     }
