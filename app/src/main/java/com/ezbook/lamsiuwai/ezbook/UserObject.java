@@ -8,6 +8,16 @@ public class UserObject {
     private String email ;
     private String profileIcon;
     private String name;
+    private String tokenId;
+
+    public void setTokenId(String tokenId) {
+        this.tokenId = tokenId;
+    }
+
+    public String getTokenId() {
+
+        return tokenId;
+    }
 
     public String getEmail() {
         return email;
