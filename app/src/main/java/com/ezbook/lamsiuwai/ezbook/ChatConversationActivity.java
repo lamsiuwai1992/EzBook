@@ -340,13 +340,15 @@ public class ChatConversationActivity extends AppCompatActivity {
                         ref.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                String imageUrl = dataSnapshot.child("message").getValue(String.class);
-                                if(imageUrl.startsWith("https"))
-                                {
-                                    //Toast.makeText(ChatConversationActivity.this, "URL : " + retrieve_image_url, Toast.LENGTH_SHORT).show();
-                                    Intent intent = (new Intent(ChatConversationActivity.this,EnlargeImageView.class));
-                                    intent.putExtra("url",imageUrl);
-                                    startActivity(intent);
+                                if(dataSnapshot.exists()){
+                                    String imageUrl = dataSnapshot.child("message").getValue(String.class);
+                                    if(imageUrl.startsWith("https"))
+                                    {
+                                        //Toast.makeText(ChatConversationActivity.this, "URL : " + retrieve_image_url, Toast.LENGTH_SHORT).show();
+                                        Intent intent = (new Intent(ChatConversationActivity.this,EnlargeImageView.class));
+                                        intent.putExtra("url",imageUrl);
+                                        startActivity(intent);
+                                    }
                                 }
                             }
 

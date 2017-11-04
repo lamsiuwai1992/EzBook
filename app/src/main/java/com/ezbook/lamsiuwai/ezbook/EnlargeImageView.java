@@ -5,6 +5,8 @@ package com.ezbook.lamsiuwai.ezbook;
  */
 
 
+import android.app.DownloadManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Matrix;
 import android.graphics.PointF;
@@ -27,7 +29,7 @@ import com.bumptech.glide.request.target.Target;
 
 
 public class EnlargeImageView extends AppCompatActivity implements View.OnTouchListener {
-    ImageView image;
+    ImageView image ,backBtn;
     Button download;
     String url;
     ProgressBar progressBar;
@@ -63,6 +65,7 @@ public class EnlargeImageView extends AppCompatActivity implements View.OnTouchL
         image = (ImageView)findViewById(R.id.fetch_enlarge_image);
         download = (Button)findViewById(R.id.image_download_button);
         progressBar = (ProgressBar)findViewById(R.id.enlarge_image_progress_bar);
+        backBtn = (ImageView)findViewById(R.id.enlarge_backBtn);
         progressBar.setVisibility(ProgressBar.VISIBLE);
 
         image.setOnTouchListener(this);
@@ -72,6 +75,13 @@ public class EnlargeImageView extends AppCompatActivity implements View.OnTouchL
             actionBar.hide();
 
         }
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
 
 
@@ -101,10 +111,11 @@ public class EnlargeImageView extends AppCompatActivity implements View.OnTouchL
         download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Sender_Name = getIntent().getStringExtra("name");
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
-                startActivity(i);
+                DownloadManager downloadmanager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+                Uri uri = Uri.parse(url);
+                DownloadManager.Request request = new DownloadManager.Request(uri);
+                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                Long reference = downloadmanager.enqueue(request);
             }
         });
     }
