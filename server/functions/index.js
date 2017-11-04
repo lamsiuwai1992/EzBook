@@ -27,10 +27,10 @@ exports.sendNotifications = functions.database.ref('/Notifications/{pushId}')
             console.log(instanceId);
             console.log('sendName:'+ sender.name + ' body:'+message.body + ' iconUrl:'+sender.profileIcon );
             const payload = {
-                notification: {
-                    title: sender.name,
-                    body: message.body,
-                    icon: sender.profileIcon
+                "data": {
+                    "title": sender.name,
+                    "body": message.body,
+                    "icon": sender.profileIcon
                 }
             };
 

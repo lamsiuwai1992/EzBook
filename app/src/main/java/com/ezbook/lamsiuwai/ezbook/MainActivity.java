@@ -89,7 +89,6 @@ public class MainActivity extends AppCompatActivity implements CategoryListingFr
         //bottomNavigationView.getMenu().getItem(2).setChecked(true);
     }
 
-
     @Override
     public void sendData(String category, String bookType) {
         Log.d("category",category);

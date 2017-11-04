@@ -1,5 +1,6 @@
 package com.ezbook.lamsiuwai.ezbook;
 
+import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,6 +39,7 @@ public class MessagingService extends FirebaseMessagingService {
         Log.d(TAG, "From: " + remoteMessage.getFrom());
 
         if (remoteMessage.getData().size() > 0) {
+            if(!isRunningInForeground()){
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
             Log.d(TAG, "Body:" + remoteMessage.getData().get("body"));
             Log.d(TAG, "Icon:" + remoteMessage.getData().get("icon"));
@@ -45,12 +48,21 @@ public class MessagingService extends FirebaseMessagingService {
             String senderIcon = remoteMessage.getData().get("icon");
             String senderName = remoteMessage.getData().get("title");
             bitmap = getBitmapfromUrl(senderIcon);
-            showNotification(msgBody,bitmap,senderName);
+            showNotification(msgBody,bitmap,senderName);}
         }
-
+        /*
         if (remoteMessage.getNotification() != null) {
-            Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
-        }
+
+                Log.d(TAG, "Message Notification Body: "+ remoteMessage.getNotification().getBody());
+                Log.d(TAG, "Message Notification Icon: "+ remoteMessage.getNotification().getIcon());
+                Log.d(TAG, "Message Notification Title: "+ remoteMessage.getNotification().getTitle());
+                String msgBody = remoteMessage.getNotification().getBody();
+                String senderIcon = remoteMessage.getNotification().getIcon();
+                String senderName = remoteMessage.getNotification().getTitle();
+                bitmap = getBitmapfromUrl(senderIcon);
+                showNotification(msgBody,bitmap,senderName);
+
+        }*/
     }
 
     private void showNotification(String message,Bitmap image,String senderName) {
@@ -76,6 +88,7 @@ public class MessagingService extends FirebaseMessagingService {
             notificationManager.notify(0, notificationBuilder.build());
         }
     }
+
     public Bitmap getBitmapfromUrl(String imageUrl) {
         try {
             URL url = new URL(imageUrl);
@@ -93,5 +106,16 @@ public class MessagingService extends FirebaseMessagingService {
         }
     }
 
+
+    protected boolean isRunningInForeground() {
+        ActivityManager manager =
+                (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> tasks = manager.getRunningTasks(1);
+        if (tasks.isEmpty()) {
+            return false;
+        }
+        String topActivityName = tasks.get(0).topActivity.getPackageName();
+        return topActivityName.equalsIgnoreCase(getPackageName());
+    }
 }
 
