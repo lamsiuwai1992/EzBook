@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:weightSum="1">
 
 
     <!--<ProgressBar-->
@@ -58,7 +59,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/show_book_recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginLeft="2dp"
         android:layout_marginRight="2dp">
 

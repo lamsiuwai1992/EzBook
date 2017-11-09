@@ -9,6 +9,7 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -23,6 +24,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.util.ArrayMap;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.util.Log;
@@ -35,6 +37,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,9 +73,17 @@ import static android.app.Activity.RESULT_OK;
 public class ProfileFragment extends Fragment {
 
     private RecyclerView recyclerView;
+    private LinearLayoutManager mLayoutManager;
+    private List<BookObject> bookList;
+
+    //FOR RECYCLER VIEW
+    Context context;
+    RecyclerView.Adapter recyclerViewAdapter;
+
 
     FirebaseUser user;
     DatabaseReference databaseReference;
+    DatabaseReference databaseReference_book;
     private Button btnLogout;
     String uid;
     TextView username;
@@ -116,28 +127,63 @@ public class ProfileFragment extends Fragment {
         user = FirebaseAuth.getInstance().getCurrentUser();
         uid = user.getUid();
 
+        usericon = view.findViewById(R.id.userIcon);
         username = view.findViewById(R.id.userName);
+        btnLogout = view.findViewById(R.id.btn_logout);
+
         changename = new AlertDialog.Builder(getActivity()).create();
         editText = new EditText(getActivity());
 
 
-        usericon = view.findViewById(R.id.userIcon);
-        btnLogout = view.findViewById(R.id.btn_logout);
+        context = getActivity().getApplicationContext();
+        mLayoutManager = new LinearLayoutManager(context);
+//        mLayoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
+        mLayoutManager.setStackFromEnd(true);
+        mLayoutManager.setReverseLayout(true);
         recyclerView = (RecyclerView) view.findViewById(R.id.show_book_recyclerView);
+        recyclerView.setLayoutManager(mLayoutManager);
+
+        bookList = new ArrayList<>();
+
+        recyclerViewAdapter = new MyBookListingRecycleViewAdapter(context, bookList);
+        recyclerView.setAdapter(recyclerViewAdapter);
+
 
         progressDialog = new ProgressDialog(getActivity());
         storageReference = FirebaseStorage.getInstance().getReference();
         databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(MainActivity.currenUserId);
+        databaseReference_book = FirebaseDatabase.getInstance().getReference("BookUpload");
+
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
 
                 userObj = dataSnapshot.getValue(UserObject.class);
                 if(!userObj.getName().equals("Null")){
                     username.setText(userObj.getName());
                     Glide.with(ProfileFragment.this.getContext()).load(userObj.getProfileIcon()).into(usericon);
 //                        Glide.with(ProfileFragment.this).load(userObj.getProfileIcon()).bitmapTransform(new CircleTransform().diskCacheStrategy(DiskCacheStrategy.ALL).into(usericon);
+                }
+//                bookList.clear();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+        databaseReference_book.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot bookObjectSnapshot:dataSnapshot.getChildren()){
+                    BookObject bookObject = bookObjectSnapshot.getValue(BookObject.class);
+                    if (bookObject.getBookOwner().equals(uid)){
+                        Log.d("LOGGED","owner: "+bookObject.getBookOwner() + "Username: "+uid);
+                        bookList.add(bookObject);
+                    }
                 }
             }
 
@@ -154,7 +200,6 @@ public class ProfileFragment extends Fragment {
                 changename.setView(editText,50,0,50,0);
                 editText.setText(username.getText());
                 editText.setSelection(username.getText().length());
-
                 changename.show();
             }
         });
@@ -166,7 +211,6 @@ public class ProfileFragment extends Fragment {
                 username.setText(userObj.getName());
             }
         });
-
 
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
