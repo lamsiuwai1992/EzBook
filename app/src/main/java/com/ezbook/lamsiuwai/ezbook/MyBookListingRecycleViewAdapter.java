@@ -94,10 +94,12 @@ public class MyBookListingRecycleViewAdapter extends RecyclerView.Adapter<MyBook
                     holder.RecycleBookList.setBackgroundColor(Color.parseColor("#E6E6E6"));
                     bookList.get(position).setState("Sold");
                     databaseReference_book.child("state").setValue("Sold");
+                    holder.BookStatus.setTextColor(Color.parseColor("#FF0000"));
                 }
                 else {
                     holder.RecycleBookList.setBackgroundColor(Color.parseColor("#FFFFFF"));
                     databaseReference_book.child("state").setValue("Available");
+                    holder.BookStatus.setTextColor(Color.parseColor("#FFFFFF"));
                 }
             }
         });

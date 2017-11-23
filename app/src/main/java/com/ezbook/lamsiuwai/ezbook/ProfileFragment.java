@@ -170,7 +170,7 @@ public class ProfileFragment extends Fragment {
         userLikeBookRef = FirebaseDatabase.getInstance().getReference("LikeBook").child(MainActivity.currenUserId);
 
         //display the username and profile icon
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -303,7 +303,8 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i ){
                 databaseReference.child("name").setValue(editText.getText().toString());
-                username.setText(userObj.getName());
+                username.setText(editText.getText().toString());
+
             }
         });
 
@@ -492,7 +493,7 @@ public class ProfileFragment extends Fragment {
 
                             @SuppressWarnings("VisibleForTests")
                             Uri downloadurl = taskSnapshot.getDownloadUrl();
-//                            databaseReference.child("profileIcon").setValue(downloadurl.toString());
+                            databaseReference.child("profileIcon").setValue(downloadurl.toString());
                         }
                     })
 
