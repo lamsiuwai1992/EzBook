@@ -2,16 +2,21 @@ package com.ezbook.lamsiuwai.ezbook;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -30,11 +35,14 @@ public class MyBookListingRecycleViewAdapter extends RecyclerView.Adapter<MyBook
 
     private Context context;
     private List<BookObject> bookList;
+    private List<LikeBookObject> likeBookObjectList;
     DatabaseReference databaseReference_book;
 
-    public MyBookListingRecycleViewAdapter(Context context, List<BookObject> bookList){
+    public MyBookListingRecycleViewAdapter(Context context, List<BookObject> bookList,List<LikeBookObject>likeBookObjectList){
         this.context = context;
         this.bookList = bookList;
+        this.likeBookObjectList = likeBookObjectList;
+
     }
 
 
@@ -68,7 +76,6 @@ public class MyBookListingRecycleViewAdapter extends RecyclerView.Adapter<MyBook
 
     @Override
     public void onBindViewHolder(final MyBookListingRecycleViewAdapter.ViewHolder holder, final int position){
-        List<AddPostImage> bookImages = bookList.get(position).getImages();
         if (!bookList.get(position).getState().equals("Available")){
             holder.RecycleBookList.setBackgroundColor(Color.parseColor("#E6E6E6"));
             holder.BookStatus.setChecked(true);
@@ -94,10 +101,14 @@ public class MyBookListingRecycleViewAdapter extends RecyclerView.Adapter<MyBook
                 }
             }
         });
+
+
     }
 
     @Override
     public int getItemCount(){
         return bookList.size();
     }
+
+
 }

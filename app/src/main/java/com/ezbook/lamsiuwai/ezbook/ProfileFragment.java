@@ -14,6 +14,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -26,12 +31,14 @@ import android.support.v4.content.FileProvider;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -49,10 +56,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -64,6 +73,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -75,23 +85,29 @@ public class ProfileFragment extends Fragment {
     private RecyclerView recyclerView;
     private LinearLayoutManager mLayoutManager;
     private List<BookObject> bookList;
+    private List<LikeBookObject> likeBookObjectList;
+
 
     //FOR RECYCLER VIEW
     Context context;
     RecyclerView.Adapter recyclerViewAdapter;
 
 
-    FirebaseUser user;
-    DatabaseReference databaseReference;
-    DatabaseReference databaseReference_book;
+    private FirebaseUser user;
+    private DatabaseReference databaseReference;
+    private DatabaseReference databaseReference_book;
+    private DatabaseReference userLikeBookRef;
+
     private Button btnLogout;
-    String uid;
-    TextView username;
-    AlertDialog changename;
-    EditText editText;
-    ImageView usericon;
-    UserObject userObj;
-    Uri FilePathUri;
+    private String uid;
+    private TextView username;
+    private AlertDialog changename;
+    private EditText editText;
+    private ImageView usericon;
+    private UserObject userObj;
+    private LikeBookObject likeObj;
+    private Uri FilePathUri;
+    private int position;
 
     ProgressDialog progressDialog ;
     StorageReference storageReference;
@@ -134,7 +150,6 @@ public class ProfileFragment extends Fragment {
         changename = new AlertDialog.Builder(getActivity()).create();
         editText = new EditText(getActivity());
 
-
         context = getActivity().getApplicationContext();
         mLayoutManager = new LinearLayoutManager(context);
 //        mLayoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
@@ -145,16 +160,16 @@ public class ProfileFragment extends Fragment {
 
         bookList = new ArrayList<>();
 
-        recyclerViewAdapter = new MyBookListingRecycleViewAdapter(context, bookList);
+        recyclerViewAdapter = new MyBookListingRecycleViewAdapter(context, bookList, likeBookObjectList);
         recyclerView.setAdapter(recyclerViewAdapter);
-
 
         progressDialog = new ProgressDialog(getActivity());
         storageReference = FirebaseStorage.getInstance().getReference();
         databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(MainActivity.currenUserId);
         databaseReference_book = FirebaseDatabase.getInstance().getReference("BookUpload");
+        userLikeBookRef = FirebaseDatabase.getInstance().getReference("LikeBook").child(MainActivity.currenUserId);
 
-
+        //display the username and profile icon
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -174,25 +189,105 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        databaseReference_book.addValueEventListener(new ValueEventListener() {
+        //display the books posted by current user
+        class BookChildEventListener implements ChildEventListener{
 
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot bookObjectSnapshot:dataSnapshot.getChildren()){
-                    BookObject bookObject = bookObjectSnapshot.getValue(BookObject.class);
-                    if (bookObject.getBookOwner().equals(uid)){
-                        Log.d("LOGGED","owner: "+bookObject.getBookOwner() + "Username: "+uid);
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                BookObject bookObject = dataSnapshot.getValue(BookObject.class);
+                if (bookObject.getBookOwner().equals(uid)){
                         bookList.add(bookObject);
                     }
-                }
+                recyclerViewAdapter.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                bookList.remove(position);
+                recyclerViewAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
-        });
+        }
 
+        databaseReference_book.addChildEventListener(new BookChildEventListener());
+
+
+        //Swipe to delete
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT ) {
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                Paint p = new Paint();
+                Bitmap icon;
+                if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
+
+                    View itemView = viewHolder.itemView;
+                    float height = (float) itemView.getBottom() - (float) itemView.getTop();
+                    float width = height / 3;
+
+                    if(dX > 0){
+                        //swipe right
+                    } else {
+                        p.setColor(Color.parseColor("#D32F2F"));
+                        RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(),(float) itemView.getRight(), (float) itemView.getBottom());
+                        c.drawRect(background,p);
+                        icon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_delete_white_24dp);
+                        RectF icon_dest = new RectF((float) itemView.getRight() - 2*width ,(float) itemView.getTop() + width,(float) itemView.getRight() - width,(float)itemView.getBottom() - width);
+                        c.drawBitmap(icon,null,icon_dest,p);
+                    }
+                }
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            }
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+//                Toast.makeText(getContext(), "on Move", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                //Remove swiped item from list and notify the RecyclerView
+                position = viewHolder.getAdapterPosition();
+                final String bookID = bookList.get(position).getBookId();
+
+                //delete the book after the user swipe on that book
+                databaseReference_book.child(bookList.get(position).getBookId()).removeValue();
+
+                //To loop through the LikeBook of Firebase, if same as the BookID (deleted book), delete it on the LikeBook also.
+                userLikeBookRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot allLikeBook: dataSnapshot.getChildren()){
+
+
+                            Log.d("LOGGED","objects: "+allLikeBook.getClass());
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
+
+        //To edit the username
         username.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -212,6 +307,8 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+
+        //To logout
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -221,6 +318,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        //To change profile icon
         usericon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
