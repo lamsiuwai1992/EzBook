@@ -75,6 +75,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static android.R.attr.data;
@@ -167,7 +168,7 @@ public class ProfileFragment extends Fragment {
         storageReference = FirebaseStorage.getInstance().getReference();
         databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(MainActivity.currenUserId);
         databaseReference_book = FirebaseDatabase.getInstance().getReference("BookUpload");
-        userLikeBookRef = FirebaseDatabase.getInstance().getReference("LikeBook").child(MainActivity.currenUserId);
+        userLikeBookRef = FirebaseDatabase.getInstance().getReference("LikeBook");
 
         //display the username and profile icon
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -179,7 +180,6 @@ public class ProfileFragment extends Fragment {
                 if(!userObj.getName().equals("Null")){
                     username.setText(userObj.getName());
                     Glide.with(ProfileFragment.this.getContext()).load(userObj.getProfileIcon()).into(usericon);
-//                        Glide.with(ProfileFragment.this).load(userObj.getProfileIcon()).bitmapTransform(new CircleTransform().diskCacheStrategy(DiskCacheStrategy.ALL).into(usericon);
                 }
 //                bookList.clear();
             }
@@ -269,11 +269,25 @@ public class ProfileFragment extends Fragment {
                 userLikeBookRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        for (DataSnapshot allLikeBook: dataSnapshot.getChildren()){
+                            GenericTypeIndicator<Map<String, List<LikeBookObject>>> genericTypeIndicator = new GenericTypeIndicator<Map<String, List<LikeBookObject>>>() {};
+                            Map<String, List<LikeBookObject>> hashMap = dataSnapshot.getValue(genericTypeIndicator);
 
+                            for (Map.Entry<String,List<LikeBookObject>> entry : hashMap.entrySet()) {
+                                Log.d("Entry Key",entry.getKey());
+                                String userId = entry.getKey();
+                                List<LikeBookObject> originalListofImages = entry.getValue();
+                                List<LikeBookObject> updateListofImages = new ArrayList<LikeBookObject>();
+                                for (LikeBookObject image: originalListofImages){
+                                    if(!image.getBookId().equals(bookID)){
+                                        updateListofImages.add(image);
+                                        Log.i("ToBeDeleted", "bookID:"+bookID);
+                                        Log.i("innerList", "bookID:"+image.getBookId());
+                                    }
 
-                            Log.d("LOGGED","objects: "+allLikeBook.getClass());
-                        }
+                                }
+                                userLikeBookRef.child(userId).setValue(updateListofImages);
+                            }
+
                     }
 
                     @Override
