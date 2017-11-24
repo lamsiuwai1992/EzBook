@@ -199,11 +199,11 @@
             <EditText
                 android:id="@+id/addPostDescField"
                 android:layout_width="match_parent"
-                android:minHeight="100dp"
-                android:layout_height="wrap_content"
+                android:layout_height="300dp"
                 android:background="@drawable/border"
                 android:layout_below="@+id/tvDesc"
                 android:padding="10dp"
+                android:gravity="top|left"
                 android:textColor="@color/input_login_hint"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
