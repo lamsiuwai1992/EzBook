@@ -16,6 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
@@ -42,7 +44,8 @@ public class BookSearchResultFragment extends Fragment {
     private RecyclerView bookListingView;
     private LinearLayoutManager mLayoutManager;
     private List<LikeBookObject> likeBookObjectList;
-
+    private TextView noBooksTag ;
+    private ProgressBar progressBar;
     public static BookSearchResultFragment newInstance(String bookName) {
         Bundle bundle = new Bundle();
         bundle.putString("bookName", bookName);
@@ -74,7 +77,10 @@ public class BookSearchResultFragment extends Fragment {
         bookList = new ArrayList<>();
         creatorList = new ArrayList<>();
         likeBookObjectList =new ArrayList<>();
+        noBooksTag =view.findViewById(R.id.booklisting_no_books);
+        progressBar = view.findViewById(R.id.booklisting_progressBar);
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbarBooklisting);
+        toolbar.setTitle(bookName);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_action_navigation_arrow_back_inverted);
         Log.d("bookName",bookName);
@@ -108,6 +114,7 @@ public class BookSearchResultFragment extends Fragment {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                progressBar.setVisibility(View.GONE);
                 bookList.clear();
                 creatorList.clear();
                 for (DataSnapshot bookObjectSnapshot : dataSnapshot.getChildren()) {
@@ -136,6 +143,9 @@ public class BookSearchResultFragment extends Fragment {
                                     Log.d("book size", String.valueOf(bookList.size()));
                                     Log.d("creator size", String.valueOf(creatorList.size()));
                                     return;
+                                }
+                                if((bookList.size() > 0)&&(creatorList.size()> 0)){
+                                    noBooksTag.setVisibility(View.INVISIBLE);
                                 }
                                 bookListingAdapter = new BookListingRecycleViewAdapter(getActivity(), bookList,creatorList,likeBookObjectList);
                                 bookListingView.setAdapter(bookListingAdapter);

@@ -179,7 +179,8 @@ public class ProfileFragment extends Fragment {
                 userObj = dataSnapshot.getValue(UserObject.class);
                 if(!userObj.getName().equals("Null")){
                     username.setText(userObj.getName());
-                    Glide.with(ProfileFragment.this.getContext()).load(userObj.getProfileIcon()).into(usericon);
+                    if(isAdded()) //avoid crashing app
+                        Glide.with(ProfileFragment.this).load(userObj.getProfileIcon()).into(usericon);
                 }
 //                bookList.clear();
             }

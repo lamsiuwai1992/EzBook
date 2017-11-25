@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
@@ -37,7 +39,8 @@ public class LikePostFragment extends Fragment {
     private RecyclerView bookListingView;
     private LinearLayoutManager mLayoutManager;
     private List<LikeBookObject> likeBookObjectList ;
-
+    private TextView noBooksTag ;
+    private ProgressBar progressBar;
     public static LikePostFragment newInstance() {
         LikePostFragment fragment = new LikePostFragment();
         return fragment;
@@ -56,6 +59,8 @@ public class LikePostFragment extends Fragment {
         bookList = new ArrayList<>();
         creatorList = new ArrayList<>();
         likeBookObjectList =new ArrayList<>();
+        noBooksTag =view.findViewById(R.id.booklisting_no_books);
+        progressBar = view.findViewById(R.id.booklisting_progressBar);
         FrameLayout toolbarLayout = view.findViewById(R.id.toolbar_container);
         toolbarLayout.setVisibility(View.GONE);
         final DatabaseReference bookUpload = database.getReference("BookUpload");
@@ -63,6 +68,8 @@ public class LikePostFragment extends Fragment {
         userLikeBookRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                progressBar.setVisibility(View.GONE);
+                noBooksTag.setVisibility(View.GONE);
                 for(DataSnapshot likeBookOjectSnapshot:dataSnapshot.getChildren()){
                     LikeBookObject likeBookObject = likeBookOjectSnapshot.getValue(LikeBookObject.class);
                     likeBookObjectList.add(likeBookObject);

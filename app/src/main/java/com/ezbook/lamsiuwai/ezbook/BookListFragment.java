@@ -16,6 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
@@ -45,6 +47,8 @@ public class BookListFragment extends Fragment {
     private RecyclerView bookListingView;
     private LinearLayoutManager mLayoutManager;
     private MaterialSearchView searchView;
+    private TextView noBooksTag ;
+    private ProgressBar progressBar;
 
     public static BookListFragment newInstance(String category , String bookType) {
         Bundle bundle = new Bundle();
@@ -79,8 +83,11 @@ public class BookListFragment extends Fragment {
         bookList = new ArrayList<>();
         creatorList = new ArrayList<>();
         likeBookObjectList =new ArrayList<>();
+        noBooksTag =view.findViewById(R.id.booklisting_no_books);
+        progressBar = view.findViewById(R.id.booklisting_progressBar);
         setHasOptionsMenu(true);
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbarBooklisting);
+        toolbar.setTitle(bookType);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_action_navigation_arrow_back_inverted);
         searchView = (MaterialSearchView)view.findViewById(R.id.search_view);
@@ -102,10 +109,11 @@ public class BookListFragment extends Fragment {
 
             @Override
             public void onSearchViewClosed() {
-
+                if(bookList.size() >0){
                 BookListingRecycleViewAdapter bookListingAdapter = new BookListingRecycleViewAdapter(getActivity(), bookList,creatorList,likeBookObjectList);
                 bookListingView.setAdapter(bookListingAdapter);
                 Log.d("On Close Book Size", String.valueOf(bookList.size()));
+                }
             }
         });
 
@@ -118,7 +126,7 @@ public class BookListFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if(newText != null && !newText.isEmpty()){
+                if(newText != null && !newText.isEmpty() && (bookList.size()>0 )){
                     List<BookObject> tempBookList = new ArrayList<BookObject>();
                     List<UserObject> tempCreatorList = new ArrayList<UserObject>();
                     for(int i = 0 ; i <= (bookList.size()-1);i++){
@@ -157,6 +165,7 @@ public class BookListFragment extends Fragment {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                progressBar.setVisibility(View.GONE);
                 bookList.clear();
                 creatorList.clear();
                 for (DataSnapshot bookObjectSnapshot : dataSnapshot.getChildren()) {
@@ -185,6 +194,9 @@ public class BookListFragment extends Fragment {
                                         Log.d("book size", String.valueOf(bookList.size()));
                                         Log.d("creator size", String.valueOf(creatorList.size()));
                                         return;
+                                    }
+                                    if((bookList.size() > 0)&&(creatorList.size()> 0)){
+                                        noBooksTag.setVisibility(View.INVISIBLE);
                                     }
                                     bookListingAdapter = new BookListingRecycleViewAdapter(getActivity(), bookList,creatorList,likeBookObjectList);
                                     bookListingView.setAdapter(bookListingAdapter);
