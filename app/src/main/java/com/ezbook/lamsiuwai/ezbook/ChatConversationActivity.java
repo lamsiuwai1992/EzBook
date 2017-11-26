@@ -295,7 +295,7 @@ public class ChatConversationActivity extends AppCompatActivity {
 
                     viewHolder.message.setLayoutParams(viewHolder.text_params);
                     viewHolder.message.setText(model.getMessage());
-                    viewHolder.message.setTextColor(Color.parseColor("#FFFFFF"));
+                    viewHolder.message.setTextColor(Color.parseColor("#000000"));
                     viewHolder.message.setVisibility(View.VISIBLE);
                     viewHolder.chat_image_incoming.setVisibility(View.GONE);
                     viewHolder.chat_image_outgoing.setVisibility(View.GONE);

@@ -61,6 +61,7 @@ public class LikePostFragment extends Fragment {
         likeBookObjectList =new ArrayList<>();
         noBooksTag =view.findViewById(R.id.booklisting_no_books);
         progressBar = view.findViewById(R.id.booklisting_progressBar);
+        noBooksTag.setText("No Favourite Books");
         FrameLayout toolbarLayout = view.findViewById(R.id.toolbar_container);
         toolbarLayout.setVisibility(View.GONE);
         final DatabaseReference bookUpload = database.getReference("BookUpload");
@@ -68,8 +69,10 @@ public class LikePostFragment extends Fragment {
         userLikeBookRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.hasChildren()){
+                    noBooksTag.setVisibility(View.INVISIBLE);
+                }
                 progressBar.setVisibility(View.GONE);
-                noBooksTag.setVisibility(View.GONE);
                 for(DataSnapshot likeBookOjectSnapshot:dataSnapshot.getChildren()){
                     LikeBookObject likeBookObject = likeBookOjectSnapshot.getValue(LikeBookObject.class);
                     likeBookObjectList.add(likeBookObject);

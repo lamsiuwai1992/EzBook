@@ -22,5 +22,7 @@
     <color name="lbl_name">#333333</color>
     <color name="btn_logut_bg">#ff6861</color>
     <color name="bookListing">#333333</color>
-    <color name="chatRm_background">#e1dede</color>
+    <color name="chatRm_background">#ECE5DD</color>
+    <color name="chat_out_going">#DCF8C6</color>
+    <color name="chat_in_coming">#ffffff</color>
 </resources>
