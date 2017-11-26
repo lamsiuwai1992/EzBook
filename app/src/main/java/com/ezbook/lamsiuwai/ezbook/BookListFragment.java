@@ -171,6 +171,7 @@ public class BookListFragment extends Fragment {
                 for (DataSnapshot bookObjectSnapshot : dataSnapshot.getChildren()) {
                     BookObject bookObject = bookObjectSnapshot.getValue(BookObject.class);
                     if((bookObject.getBookType().equals(bookType)&&(bookObject.getState().equals("Available")))){
+                        noBooksTag.setVisibility(View.INVISIBLE);
                         final String creatorId = bookObject.getBookOwner();
                             DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
                             userRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -195,9 +196,7 @@ public class BookListFragment extends Fragment {
                                         Log.d("creator size", String.valueOf(creatorList.size()));
                                         return;
                                     }
-                                    if((bookList.size() > 0)&&(creatorList.size()> 0)){
-                                        noBooksTag.setVisibility(View.INVISIBLE);
-                                    }
+
                                     bookListingAdapter = new BookListingRecycleViewAdapter(getActivity(), bookList,creatorList,likeBookObjectList);
                                     bookListingView.setAdapter(bookListingAdapter);
 
