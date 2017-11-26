@@ -119,7 +119,8 @@ public class BookSearchResultFragment extends Fragment {
                 creatorList.clear();
                 for (DataSnapshot bookObjectSnapshot : dataSnapshot.getChildren()) {
                     BookObject bookObject = bookObjectSnapshot.getValue(BookObject.class);
-                    if(bookObject.getState().equals("Available")){
+                    Log.d("bookName",bookObject.getSearchBookName());
+                    if(bookObject.getState().equals("Available") && bookObject.getSearchBookName().contains(bookName)){
                         noBooksTag.setVisibility(View.INVISIBLE);
                         final String creatorId = bookObject.getBookOwner();
                         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
